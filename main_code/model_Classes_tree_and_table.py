@@ -24,14 +24,14 @@ http://rowinggolfer.blogspot.fr/2010/05/qtreeview-and-qabractitemmodel-example.h
 """
 
 
-from PyQt4 import QtCore,QtGui
+from PyQt5 import QtCore,QtGui,QtWidgets
 #from data_objects import *
 #from item_classes_campaign import *
 import numpy as np
 from matplotlib.dates import date2num,num2date
 
 
-class MyTreeItem(QtGui.QTreeWidgetItem):
+class MyTreeItem(QtWidgets.QTreeWidgetItem):
     """
     Tree item
     each item stores its coordinates within the grav_obj hierarchy, to easily
@@ -64,7 +64,7 @@ class MyTreeItem(QtGui.QTreeWidgetItem):
         self.setCheckState(2, QtCore.Qt.Checked) # 2 is the column number
 
 
-class MyTree(QtGui.QTreeWidget):
+class MyTree(QtWidgets.QTreeWidget):
     """
     a standard tree widget, which provides a standard tree view, implicitely
     associated with a predefined tree model

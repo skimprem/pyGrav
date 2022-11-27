@@ -35,9 +35,10 @@ should be the tide- and pressure- correcter one (gcorr?)
 
 """
 import sys,os,shutil,subprocess,glob
-from PyQt4 import QtGui,QtCore
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5 import QtGui,QtCore
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import * 
 from data_objects import *
 from synthetic_tides import *
 from copy import deepcopy
@@ -50,14 +51,14 @@ import matplotlib.dates as md
 from model_Classes_tree_and_table import *
 
 import matplotlib
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 #from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 
-class mainProg(QtGui.QMainWindow):
+class mainProg(QtWidgets.QMainWindow):
     """
     Main window definition
     
@@ -175,7 +176,7 @@ class mainProg(QtGui.QMainWindow):
         self.campaigndata=campaigndata
         if fname:
             #create new window and set as central Widget:
-            surveySelectionWin=QtGui.QWidget()
+            surveySelectionWin=QtWidgets.QWidget()
             self.setCentralWidget(surveySelectionWin)        
             self.statusBar().showMessage("Please choose survey selection method")
             # create buttons and actions
@@ -249,7 +250,7 @@ class mainProg(QtGui.QMainWindow):
         #self.saveUnprocessedAction.setEnabled(True)             
         self.saveProcessedAction.setEnabled(True)        
         self.correctRecordedTimeAction.setEnabled(True)
-        #emptywin=QtGui.QWidget()
+        #emptywin=QtWidgets.QWidget()
         #self.setCentralWidget(emptywin)
         self.dataSelection()   
         
@@ -259,7 +260,7 @@ class mainProg(QtGui.QMainWindow):
         """
         
         #create new window and set as central Widget:
-        simpleDiffSelectionWin=QtGui.QWidget()
+        simpleDiffSelectionWin=QtWidgets.QWidget()
         self.setCentralWidget(simpleDiffSelectionWin)        
         self.statusBar().showMessage("Please choose simple difference loading method")
         # create buttons and actions
@@ -285,7 +286,7 @@ class mainProg(QtGui.QMainWindow):
         """
         
         #create new window and set as central Widget:
-        simpleDiffSelectionWin=QtGui.QWidget()
+        simpleDiffSelectionWin=QtWidgets.QWidget()
         self.setCentralWidget(simpleDiffSelectionWin)        
         self.statusBar().showMessage("Please choose simple difference loading method")
         # create buttons and actions
@@ -311,7 +312,7 @@ class mainProg(QtGui.QMainWindow):
 
         # ask for data file
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
-        survname=datetime(1990,02,11)
+        survname=datetime(1990,2,11)
         survey=Survey(ChannelList(),str(survname.date()))
         survey.readSimpleDiff(fname)
         self.campaigndata.survey_dic[survname.toordinal()]=survey
@@ -328,7 +329,7 @@ class mainProg(QtGui.QMainWindow):
 
         # ask for data file
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
-        survname=datetime(1990,02,11)
+        survname=datetime(1990,2,11)
         staticdataset=StaticDataSet()
         staticdataset.readSimpleDiff_static(fname)
         self.static_dataset=staticdataset
@@ -408,7 +409,7 @@ class mainProg(QtGui.QMainWindow):
         #set the survey selection option required by the survey populating 
         #function:        
         self.survey_selection_option=2
-        print 'hold on a sec'
+        print('hold on a sec')
         self.statusBar().showMessage("Hold on a sec")        
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)          
         self.surveydates=read_start_end_dates(fname)        
@@ -421,17 +422,17 @@ class mainProg(QtGui.QMainWindow):
         ask the user for start and end dates of a single survey
         """
         self.survey_selection_option=3
-        chooseSingleSurvey=QtGui.QWidget()
+        chooseSingleSurvey=QtWidgets.QWidget()
         self.setCentralWidget(chooseSingleSurvey)      
         self.statusBar().showMessage("Please enter start/end dates of a survey")
         
         
-        chooseSingleSurvey.yr=QtGui.QLabel('year')
-        chooseSingleSurvey.month=QtGui.QLabel('month')
-        chooseSingleSurvey.day=QtGui.QLabel('day')
-        chooseSingleSurvey.hr=QtGui.QLabel('hr')
-        chooseSingleSurvey.mn=QtGui.QLabel('mn')
-        chooseSingleSurvey.ss=QtGui.QLabel('ss')
+        chooseSingleSurvey.yr=QtWidgets.QLabel('year')
+        chooseSingleSurvey.month=QtWidgets.QLabel('month')
+        chooseSingleSurvey.day=QtWidgets.QLabel('day')
+        chooseSingleSurvey.hr=QtWidgets.QLabel('hr')
+        chooseSingleSurvey.mn=QtWidgets.QLabel('mn')
+        chooseSingleSurvey.ss=QtWidgets.QLabel('ss')
         chooseSingleSurvey.yrEdit=QtGui.QLineEdit()
         chooseSingleSurvey.monthEdit=QtGui.QLineEdit()
         chooseSingleSurvey.dayEdit=QtGui.QLineEdit()
@@ -450,8 +451,8 @@ class mainProg(QtGui.QMainWindow):
                           
         #locations                
         grid = QtGui.QGridLayout()
-        grid.addWidget(QtGui.QLabel('Start date'),1,1)
-        grid.addWidget(QtGui.QLabel('End date'),1,2)        
+        grid.addWidget(QtWidgets.QLabel('Start date'),1,1)
+        grid.addWidget(QtWidgets.QLabel('End date'),1,2)        
         grid.addWidget(chooseSingleSurvey.yr,2,0)
         grid.addWidget(chooseSingleSurvey.yrEdit,2,1) 
         grid.addWidget(chooseSingleSurvey.yrEditend,2,2)         
@@ -494,7 +495,7 @@ class mainProg(QtGui.QMainWindow):
         """
         Ask for base station number
         """
-        baseStationSelectionWin=QtGui.QWidget()
+        baseStationSelectionWin=QtWidgets.QWidget()
         
         self.setCentralWidget(baseStationSelectionWin)        
         self.statusBar().showMessage("Please enter base station number")
@@ -515,7 +516,7 @@ class mainProg(QtGui.QMainWindow):
 #        hbox.addWidget(baseStationSelectionWin.btn1)  
 #        hbox.addStretch(1)
 #        vbox = QtGui.QVBoxLayout()
-#        vbox.addWidget(QtGui.QLabel('Enter base station number'))
+#        vbox.addWidget(QtWidgets.QLabel('Enter base station number'))
 #        vbox.addLayout(hbox)
 #        vbox.addStretch(1)
 #        baseStationSelectionWin.setLayout(vbox)   
@@ -537,7 +538,7 @@ class mainProg(QtGui.QMainWindow):
         elif self.survey_selection_option==1:
             self.campaigndata.populateSurveyDic(2,base_station,None,time_threshold=self.t_threshold,base_cycling_station=self.base_cycling_station)
     
-        #emptywin=QtGui.QWidget()
+        #emptywin=QtWidgets.QWidget()
         #self.setCentralWidget(emptywin)
         self.dataSelection()        
         #self.statusBar().showMessage("Process some data?")     
@@ -566,7 +567,7 @@ class mainProg(QtGui.QMainWindow):
             - loadTideTimeSeries: load a synthetic tide and use it as a 
             correction
         """
-        tidecorrwin=QtGui.QWidget()
+        tidecorrwin=QtWidgets.QWidget()
         self.statusBar().showMessage("Please choose tidal correction method")
 
         tidecorrwin.btn1 = QtGui.QPushButton('Use CG5 tide correction', self)
@@ -639,12 +640,12 @@ class mainProg(QtGui.QMainWindow):
         corrections
         """
         
-        enterCoordinates=QtGui.QWidget()
+        enterCoordinates=QtWidgets.QWidget()
         self.statusBar().showMessage("Please enter survey coordinates")        
         
-        enterCoordinates.lat=QtGui.QLabel('latitude')
-        enterCoordinates.lon=QtGui.QLabel('longitude')
-        enterCoordinates.alt=QtGui.QLabel('altitude')
+        enterCoordinates.lat=QtWidgets.QLabel('latitude')
+        enterCoordinates.lon=QtWidgets.QLabel('longitude')
+        enterCoordinates.alt=QtWidgets.QLabel('altitude')
         enterCoordinates.latEdit=QtGui.QLineEdit()
         enterCoordinates.lonEdit=QtGui.QLineEdit()
         enterCoordinates.altEdit=QtGui.QLineEdit()    
@@ -764,14 +765,14 @@ class mainProg(QtGui.QMainWindow):
         - Agnew, D.C., 2012, SPOTL: Some Programs for Ocean-Tide Loading
         """
         
-        enterCoordinates=QtGui.QWidget()
+        enterCoordinates=QtWidgets.QWidget()
         
 #        self.setCentralWidget(enterCoordinates)      
         self.statusBar().showMessage("Please enter survey coordinates")        
         
-        enterCoordinates.lat=QtGui.QLabel('latitude')
-        enterCoordinates.lon=QtGui.QLabel('longitude')
-        enterCoordinates.alt=QtGui.QLabel('altitude')
+        enterCoordinates.lat=QtWidgets.QLabel('latitude')
+        enterCoordinates.lon=QtWidgets.QLabel('longitude')
+        enterCoordinates.alt=QtWidgets.QLabel('altitude')
         enterCoordinates.latEdit=QtGui.QLineEdit()
         enterCoordinates.lonEdit=QtGui.QLineEdit()
         enterCoordinates.altEdit=QtGui.QLineEdit()    
@@ -889,8 +890,8 @@ class mainProg(QtGui.QMainWindow):
         #levels
         if self.campaigndata.t:
             Atm.interpolateOnGivenTimes(self.campaigndata.t)           
-            print len(self.campaigndata.corr_g)
-            print len(Atm.d)
+            print(len(self.campaigndata.corr_g))
+            print(len(Atm.d))
                
         self.campaigndata.corr_g=self.campaigndata.grav-Atm.d
         self.campaigndata.grav=self.campaigndata.corr_g
@@ -928,7 +929,7 @@ class mainProg(QtGui.QMainWindow):
                     self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].corr_g=self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].grav-Atmtemp3.d   
                     self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].grav=self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].corr_g   
 
-        #emptywin=QtGui.QWidget()
+        #emptywin=QtWidgets.QWidget()
         #self.setCentralWidget(emptywin)
         self.statusBar().showMessage("Process some data?")                        
     
@@ -973,7 +974,7 @@ class mainProg(QtGui.QMainWindow):
         
         """
         #### define the data selection window Widget:
-        self.dataselectionwin=QtGui.QWidget()        
+        self.dataselectionwin=QtWidgets.QWidget()        
         mess="check surveys, loops and stations to keep for processing/saving (left panel) and select data on each station (middle panel). click the ""update plots"" button to refresh."
         self.statusBar().showMessage(mess)         
         # and the final layout:
@@ -1028,11 +1029,11 @@ class mainProg(QtGui.QMainWindow):
         uncheckall_button.clicked.connect(self.uncheckall)  
         #apply_tide_corr_button = QtGui.QPushButton("&tide correction",self)
         #apply_tide_corr_button.clicked.connect(self.applyTideCorrSingleStation)          
-        autoselec_tilts=QtGui.QWidget()        
-        autoselec_sd=QtGui.QWidget()         
-        autoselec_grav=QtGui.QWidget()   
-        autoselec_dur=QtGui.QWidget()              
-        autoselec_all=QtGui.QWidget()                    
+        autoselec_tilts=QtWidgets.QWidget()        
+        autoselec_sd=QtWidgets.QWidget()         
+        autoselec_grav=QtWidgets.QWidget()   
+        autoselec_dur=QtWidgets.QWidget()              
+        autoselec_all=QtWidgets.QWidget()                    
         autoselec_tilts.button = QtGui.QPushButton("&auto uncheck tilts >",self)
         autoselec_tilts.button.clicked.connect(lambda : self.autoselectFct_tilt(autoselec_tilts))           
         autoselec_sd.button = QtGui.QPushButton("&auto uncheck SD >",self)
@@ -1299,26 +1300,26 @@ class mainProg(QtGui.QMainWindow):
             # it's a station
             if not item.checkState(0): 
                 self.campaigndata.survey_dic[item.keysurv].loop_dic[item.keyloop].station_dic[item.keysta].keepitem=0            
-                print "station unchecked"
+                print("station unchecked")
             else:   
                 self.campaigndata.survey_dic[item.keysurv].loop_dic[item.keyloop].station_dic[item.keysta].keepitem=1            
-                print "station checked"
+                print("station checked")
         elif item.keysurv is not None and item.keyloop is not None and item.keysta is None:  
             # it's a loop
             if not item.checkState(0): 
                 self.campaigndata.survey_dic[item.keysurv].loop_dic[item.keyloop].keepitem=0
-                print "loop unchecked"            
+                print("loop unchecked")            
             else:   
                 self.campaigndata.survey_dic[item.keysurv].loop_dic[item.keyloop].keepitem=1
-                print "loop checked"
+                print("loop checked")
         elif item.keysurv is not None and item.keyloop is None and item.keysta is None:  
             # it's a survey
             if not item.checkState(0): 
                 self.campaigndata.survey_dic[item.keysurv].keepitem=0
-                print "survey unchecked"            
+                print("survey unchecked")            
             else:   
                 self.campaigndata.survey_dic[item.keysurv].keepitem=1
-                print "survey checked"
+                print("survey checked")
                                           
     def onClick(self, item, column):
         """
@@ -1409,7 +1410,7 @@ class mainProg(QtGui.QMainWindow):
                         self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].keepitem=0
         
         
-        #tmp=QtGui.QWidget()
+        #tmp=QtWidgets.QWidget()
         #tmp.setGeometry(50, 50, 350, 300)
         #self.setCentralWidget(tmp)      
         self.statusBar().showMessage("Data selected")                
@@ -1418,7 +1419,7 @@ class mainProg(QtGui.QMainWindow):
         """
         Drift adjustment function
         """          
-        driftAdjWin=QtGui.QWidget()
+        driftAdjWin=QtWidgets.QWidget()
         driftAdjWin.setGeometry(50, 50, 350, 300)
 
         self.statusBar().showMessage("Please choose drift adjustment method")
@@ -1454,17 +1455,17 @@ class mainProg(QtGui.QMainWindow):
         """
         Use Datum-free Least Square inversion from Hwang et al (2002)
         """
-        LSOptions=QtGui.QWidget()
+        LSOptions=QtWidgets.QWidget()
         
         LSOptions.setGeometry(50, 50, 350, 300)
         self.statusBar().showMessage("enter LS options")
         
-        LSOptions.drift_t=QtGui.QLabel('temporal drift polynomial?')
-        LSOptions.drift_k=QtGui.QLabel('temperature drift polynomial?')        
-        LSOptions.sigma_factor=QtGui.QLabel('SD factor to data')                
-        LSOptions.sigma_add=QtGui.QLabel('SD add to data (mgal)')        
-        LSOptions.alpha=QtGui.QLabel('Significance level for global model test')        
-        LSOptions.woutfiles=QtGui.QLabel('Write Output Files (y/n)?')        
+        LSOptions.drift_t=QtWidgets.QLabel('temporal drift polynomial?')
+        LSOptions.drift_k=QtWidgets.QLabel('temperature drift polynomial?')        
+        LSOptions.sigma_factor=QtWidgets.QLabel('SD factor to data')                
+        LSOptions.sigma_add=QtWidgets.QLabel('SD add to data (mgal)')        
+        LSOptions.alpha=QtWidgets.QLabel('Significance level for global model test')        
+        LSOptions.woutfiles=QtWidgets.QLabel('Write Output Files (y/n)?')        
        
         LSOptions.drift_tEdit=QtGui.QLineEdit('1')
         LSOptions.drift_kEdit=QtGui.QLineEdit('0')
@@ -1563,16 +1564,16 @@ class mainProg(QtGui.QMainWindow):
         template if the user does not want mcgravi gmt output plots. Or ask
         the user to provide one if needed)
         """
-        mcGraviOptions=QtGui.QWidget()
+        mcGraviOptions=QtWidgets.QWidget()
         self.statusBar().showMessage("enter MCGravi options")
                 
         mcGraviOptions.datafordriftadj=datafordriftadj
         mcGraviOptions.output_root_dir=output_root_dir
         
-        mcGraviOptions.mode=QtGui.QLabel('Mode? (1=datum-free 2=weighted constraint')
-        mcGraviOptions.drift_t=QtGui.QLabel('temporal drift polynomial?')
-        mcGraviOptions.drift_k=QtGui.QLabel('temperature drift polynomial?')        
-        mcGraviOptions.sigma_add=QtGui.QLabel('SD add to data (mgal)')        
+        mcGraviOptions.mode=QtWidgets.QLabel('Mode? (1=datum-free 2=weighted constraint')
+        mcGraviOptions.drift_t=QtWidgets.QLabel('temporal drift polynomial?')
+        mcGraviOptions.drift_k=QtWidgets.QLabel('temperature drift polynomial?')        
+        mcGraviOptions.sigma_add=QtWidgets.QLabel('SD add to data (mgal)')        
         
         mcGraviOptions.modeEdit=QtGui.QLineEdit('1')
         mcGraviOptions.drift_tEdit=QtGui.QLineEdit('1')
@@ -1714,10 +1715,10 @@ class mainProg(QtGui.QMainWindow):
 
                 #fill in the survey object:
                 self.campaigndata.survey_dic[survid].read_from_mcgravi_output_file(mcgravi_filename[0])
-                print "For survey: %s"%(num2date(survid))
-                print "Station , g (mgal), SD (mgal)"                
+                print("For survey: %s"%(num2date(survid)))
+                print("Station , g (mgal), SD (mgal)")                
                 for tupid,tup in self.campaigndata.survey_dic[survid].output_dic.iteritems():
-                    print "%d, %7.4f, %7.4f"%(tup)
+                    print("%d, %7.4f, %7.4f"%(tup))
                
                                                      
     def saveSimpleDiff(self):
@@ -1732,7 +1733,7 @@ class mainProg(QtGui.QMainWindow):
         'simple_diff_data_hierarchy_%4d%02d%02d_%02d%02d%02d.txt'%(tday.year,\
         tday.month,tday.day,tday.hour,tday.minute,tday.second),'w')        
         for survid,surv in self.campaigndata.survey_dic.iteritems():
-            print survid
+            print(f'{survid}')
             if surv.keepitem==1:
                 survdir=self.output_root_dir+os.sep+surv.name  
                 if not os.path.exists(survdir):
@@ -1774,12 +1775,12 @@ class mainProg(QtGui.QMainWindow):
         survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1],axis=0)
         for surv in survnames:
             if surv[1] == item.text():
-                #print self.campaigndata.survey_dic[surv[0]].name
-                print surv[1]
+                #print(f'{self.campaigndata.survey_dic[surv[0]].name}')
+                print(f'{surv[1]}')
                 self.referencesurvey=self.campaigndata.survey_dic[int(surv[0])]        
         
         #create new window and set as central Widget:
-        ddSelectionWin=QtGui.QWidget()
+        ddSelectionWin=QtWidgets.QWidget()
         self.statusBar().showMessage("Please choose double differences method")
         
         # create buttons and actions
@@ -1804,7 +1805,7 @@ class mainProg(QtGui.QMainWindow):
         #double difference option 1=classic 2=network mean
         DD=self.campaigndata.calculateDoubleDifferences(self.referencesurvey,1)
         self.DD=DD
-        print "Done: save option for double difference is now activated"
+        print("Done: save option for double difference is now activated")
         self.statusBar().showMessage("Done: save option for double difference is now activated")                
         self.saveAction2.setEnabled(True) 
         self.popup.close()
@@ -1817,7 +1818,7 @@ class mainProg(QtGui.QMainWindow):
         #double difference option 1=classic 2=network mean
         DD=self.campaigndata.calculateDoubleDifferences(self.referencesurvey,2)
         self.DD=DD
-        print "Done: save option for double difference is now activated"
+        print("Done: save option for double difference is now activated")
         self.statusBar().showMessage("Done: save option for double difference is now activated")                
         self.saveAction2.setEnabled(True)     
         self.popup.close()
@@ -1868,7 +1869,7 @@ class mainProg(QtGui.QMainWindow):
         """
         """
         #### define the data selection window Widget:
-        gdispwin=QtGui.QWidget()        
+        gdispwin=QtWidgets.QWidget()        
         mess="select a survey to see simple differences plots"
         self.statusBar().showMessage(mess)         
         # and the final layout:
@@ -1936,7 +1937,7 @@ class mainProg(QtGui.QMainWindow):
         survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1]
         for surv in survnames:
             if surv[1] == item.text():
-                print self.campaigndata.survey_dic[surv[0]].name
+                print(f'{self.campaigndata.survey_dic[surv[0]].name}')
                 simpleDiffDic=self.campaigndata.survey_dic[surv[0]].output_dic
                 stanames=[station[0] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
                 gval=[station[1] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
@@ -2133,7 +2134,7 @@ class mainProg(QtGui.QMainWindow):
              
              
     def create_status_bar(self,status_string):
-        self.status_text = QtGui.QLabel(status_string)
+        self.status_text = QtWidgets.QLabel(status_string)
         self.statusBar().addWidget(self.status_text, 1)
                 
     def create_action(  self, text, slot=None, shortcut=None, 
@@ -2143,7 +2144,7 @@ class mainProg(QtGui.QMainWindow):
         Simplify action creation
         """                            
                             
-        action = QtGui.QAction(text, self)
+        action = QtWidgets.QAction(text, self)
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % icon))
         if shortcut is not None:
@@ -2152,7 +2153,8 @@ class mainProg(QtGui.QMainWindow):
             action.setToolTip(tip)
             action.setStatusTip(tip)
         if slot is not None:
-            self.connect(action, QtCore.SIGNAL(signal), slot)
+            action.triggered.connect(slot)
+            # self.connect(action, QtCore.SIGNAL(signal), slot)
         if checkable:
             action.setCheckable(True)
         if enabled is not True:
@@ -2169,7 +2171,7 @@ class mainProg(QtGui.QMainWindow):
             else:
                 target.addAction(action) 
 
-class ProgressBar(QtGui.QWidget):
+class ProgressBar(QtWidgets.QWidget):
     """
     define progress bar
     """
@@ -2187,7 +2189,7 @@ class ProgressBar(QtGui.QWidget):
         
 def main():
     
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     ex = mainProg()
     app.exec_()
 #    sys.exit(app.exec_())        

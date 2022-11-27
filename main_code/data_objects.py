@@ -37,7 +37,8 @@ processing functions, called from the main program.
 from time import time
 import glob, os
 from copy import *
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets
 from datetime import *
 from synthetic_tides import *
 from scipy import sqrt
@@ -119,10 +120,10 @@ class ChannelList(object):
         """Override the built-in method 'print' when applied to such object
         
         """
-        print 'length of field t: %d'%(len(self.t))       
-        print 'first station: %s'%(self.station[0])   
-        print 'last station: %s'%(self.station[len(self.station)-1]) 
-        print 'station availables: %s'%(set(self.station))
+        print('length of field t: %d'%(len(self.t)))
+        print('first station: %s'%(self.station[0]))
+        print('last station: %s'%(self.station[len(self.station)-1]))
+        print('station availables: %s'%(set(self.station)))
         return "you're welcome"
         
     def extract_subset(self,start_date,end_date):
@@ -160,7 +161,7 @@ class ChannelList(object):
 
             PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load c data')   
             
-            print "number of lines: %d"%len([1 for line in  open(filename, 'r')])
+            print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
             PBAR.show()
 
             for line in fh:    
@@ -191,11 +192,11 @@ class ChannelList(object):
                                                                                     
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
-            print 'No file : %s' %(filename)            
+            print('No file : %s' %(filename))
         except ValueError:
-            print 'pb at line %d : check raw data file'%(i)
+            print('pb at line %d : check raw data file'%(i))
         except IndexError:
-            print 'pb at line %d : check raw data file: possibly last line?'%(i)         
+            print('pb at line %d : check raw data file: possibly last line?'%(i)) 
             
     def read_modif_c_file(self,filename):
         """
@@ -211,7 +212,7 @@ class ChannelList(object):
             fh = open(filename, 'r')
             i=0
             #PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load c data')               
-            print "number of lines: %d"%len([1 for line in  open(filename, 'r')])
+            print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
             #PBAR.show()
             for line in fh:    
                 #PBAR.progressbar.setValue(i)
@@ -242,11 +243,11 @@ class ChannelList(object):
                                                                                     
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
-            print 'No file : %s' %(filename)            
+            print('No file : %s' %(filename))
         except ValueError:
-            print 'pb at line %d : check raw data file'%(i)
+            print('pb at line %d : check raw data file'%(i))
         except IndexError:
-            print 'pb at line %d : check raw data file: possibly last line?'%(i)            
+            print('pb at line %d : check raw data file: possibly last line?'%(i))
                         
     def populateFromSubDictionnaries(self,subdict):
         """
@@ -322,7 +323,7 @@ class Campaign(ChannelList):
             fh = open(filename, 'r')
             i=0
             PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load raw data')   
-            print "number of lines: %d"%len([1 for line in  open(filename, 'r')])
+            print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
             PBAR.show()
             for line in fh:    
                 PBAR.progressbar.setValue(i)
@@ -356,11 +357,11 @@ class Campaign(ChannelList):
                 self.keepdata.append(1)                                                                                         
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
-            print 'No file : %s' %(filename)            
+            print('No file : %s' %(filename))
         except ValueError:
-            print 'pb at line %d : check raw data file'%(i)
+            print('pb at line %d : check raw data file'%(i))
         except IndexError:
-            print 'pb at line %d : check raw data file: possibly last line?'%(i)  
+            print('pb at line %d : check raw data file: possibly last line?'%(i))
             
     def populateSurveyDic(self,options,base_station,start_end_dates=None,time_threshold=0,base_cycling_station=0):
         """populate survey dictionary following user-defined rules
@@ -412,7 +413,7 @@ class Campaign(ChannelList):
             t_temp.insert(0,self.t[0])
             t_temp.append(self.t[len(self.t)-1])
             diff_t=np.diff(t_temp)
-            print diff_t
+            print(diff_t)
             # define number of data to retain before the start and after the 
             # end of a survey (base station): could be passed as an argument
             n_to_keep=15            
@@ -421,13 +422,13 @@ class Campaign(ChannelList):
             test=0
             k=0
             for i in ind:
-                print i
-                print diff_t[k].days*24
-                #print diff_t[i].seconds/60/60
+                print(i)
+                print(diff_t[k].days*24)
+                #print(diff_t[i].seconds/60/60)
                 diff_hr=diff_t[k].days*24 + diff_t[k].seconds/60/60
-                print diff_hr                
+                print(diff_hr)           
                 if diff_hr >= time_threshold :
-                    print 'ok'
+                    print('ok')
                     # if we are quitting a survey
                     if test==1:
                         if base_cycling_station==1:
@@ -439,10 +440,10 @@ class Campaign(ChannelList):
                         elif base_cycling_station==0:
                             tstop=self.t[ind[k-1]]
                         key_id=tstart.toordinal()  
-                        print key_id
-                        print str(datetime.fromordinal(key_id).date())
-                        print tstart
-                        print tstop                        
+                        print(key_id)
+                        print(str(datetime.fromordinal(key_id).date()))
+                        print(tstart)
+                        print(tstop)                      
                         temp_camp=deepcopy(self)
                         temp_surv=temp_camp.extract_subset(tstart,tstop)  
                         # create a new Survey-type object:                                
@@ -493,9 +494,9 @@ class Campaign(ChannelList):
                 surveydate=datetime.strptime(vals[1],'%Y-%m-%d')
                 survtemp.keepitem=1
                 keysurv=int(surveydate.toordinal())
-                print "process survey: %d (%s)"%(keysurv,vals[1])
+                print("process survey: %d (%s)"%(keysurv,vals[1]))
                 #keysurv=str(surveydate.toordinal())
-                #print "process survey: %s (%s)"%(keysurv,vals[1])                
+                #print("process survey: %s (%s)"%(keysurv,vals[1])) 
                 nloops=int(vals[3])
                 survdir=vals[5]
                 k=0
@@ -755,7 +756,7 @@ class Campaign(ChannelList):
             surv.height_bouguer_corr='ok'
             for sta_id,sta in surv.output_dic.iteritems():
                 #initiate to NaNs
-                sta=sta+(NaN,NaN,)
+                sta=sta+(np.NaN,np.NaN,)
                 for line in lines:
                     line = line.strip() 
                     vals=line.split()
@@ -983,7 +984,7 @@ class Campaign(ChannelList):
                                  #update SD:
                                  # -get SE values:
                                  sdtmp=[sta.sd[i]/sqrt(sta.dur[i]) for i in range(len(sta.t))]
-                                 #print np.mean(sdtmp)
+                                 #print(np.mean(sdtmp))
                                  # -update with SD factor and additional terms:
                                  sdtmp=[sdtmp[i]*sd_factor for i in range(len(sta.t))] 
                                  sdtmp=[sqrt(sdtmp[i]*sdtmp[i]+sd_add*sd_add) for i in range(len(sta.t))] 
@@ -1128,7 +1129,7 @@ class Survey(ChannelList):
                         temp_loop2.populateStationDic()
                         self.loop_dic[nloop]=temp_loop2
                 prev_sta=curr_sta            
-        print 'number of loops: %d'%(nloop)        
+        print('number of loops: %d'%(nloop))
         if option==2:
             raise UserWarning('option not implemented yet')        
           
@@ -1282,10 +1283,10 @@ class Survey(ChannelList):
         
 
         #display results
-        print "For survey: %s"%(self.name)
-        print "Station , g (mgal), SD (mgal)"
+        print("For survey: %s"%(self.name))
+        print("Station , g (mgal), SD (mgal)")
         for tupid,tup in self.output_dic.iteritems():
-            print "%d, %7.4f, %7.4f"%(tup)             
+            print("%d, %7.4f, %7.4f"%(tup))         
             
         #calculate and display statistics:            
         lsd.lsStatistics(alpha)
@@ -1352,9 +1353,9 @@ class Survey(ChannelList):
             file.write("chi square value:                   %6.2f\n"%float(lsd.chi2))
             file.write("critical chi square value:          %6.2f\n"%float(lsd.chi2c))        
             if lsd.chi2<lsd.chi2c:
-                print "Chi-test accepted\n"
+                print("Chi-test accepted\n")
             else:
-                print "Chi-test rejected\n"    
+                print("Chi-test rejected\n")
                 
             file.write("\n")    
             file.write(" ==============================================================================\n")                
@@ -1438,10 +1439,10 @@ class Loop(ChannelList):
         """Override the built-in method 'print' when applied to such object
         
         """
-        print 'length of field t: %d'%(len(self.t))       
-        print 'first station: %s'%(self.station[0])   
-        print 'last station: %s'%(self.station[len(self.station)-1]) 
-        print 'station availables: %s'%(set(self.station))
+        print('length of field t: %d'%(len(self.t)))
+        print('first station: %s'%(self.station[0]))  
+        print('last station: %s'%(self.station[len(self.station)-1]))
+        print('station availables: %s'%(set(self.station)))
         return "you're welcome"
         
         
@@ -1499,7 +1500,7 @@ class Loop(ChannelList):
         """
     
         offset=self.station_dic[base_station].grav[0]
-        print "filename: %s"%filename
+        print("filename: %s"%filename)
         file=open(filename,'w')
         
         for station_id,sta in sorted(self.station_dic.iteritems(), key=lambda x: x[1].t[1]):                  
@@ -1515,8 +1516,7 @@ class Loop(ChannelList):
                             sta.t[i].hour*60+sta.t[i].minute+sta.t[i].second/60,
                             sta.t[i].day,sta.t[i].month,sta.t[i].year-2000,
                             sta.t[i].hour,sta.t[i].minute,sta.t[i].second,
-            	              sta.grav[i]-offset))
-    
+            	            sta.grav[i]-offset))
         file.close()
 
     def writeModifCFile(self,filename,base_station):
@@ -1538,7 +1538,7 @@ class Loop(ChannelList):
         """
     
         offset=self.station_dic[base_station].grav[0]
-        print "filename: %s"%filename
+        print("filename: %s"%filename)
         file=open(filename,'w')
         
         for station_id,sta in sorted(self.station_dic.iteritems(), key=lambda x: x[1].t[1]):                  
@@ -1605,10 +1605,10 @@ class Station(ChannelList):
     def __str__(self):
         """Override the built-in method 'print' when applied to such object
         """
-        print 'length of field t: %d'%(len(self.t))       
-        print 'first station: %s'%(self.station[0])   
-        print 'last station: %s'%(self.station[len(self.station)-1]) 
-        print 'station availables: %s'%(set(self.station))
+        print('length of field t: %d'%(len(self.t)))
+        print('first station: %s'%(self.station[0]))  
+        print('last station: %s'%(self.station[len(self.station)-1]))
+        print('station availables: %s'%(set(self.station)))
         return "you're welcome"
 
 
@@ -1646,7 +1646,7 @@ class timeSeries(object):
         """Override the built-in method 'print' when applied to such object
         
         """
-        print name    
+        print(name)
         return "you're welcome"
 
     def populateFromTsoftFile(self,filename,channel):
@@ -1662,7 +1662,7 @@ class timeSeries(object):
 
             PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load data')   
             
-            print "number of lines: %d"%len([1 for line in  open(filename, 'r')])
+            print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
             PBAR.show()
             test=0
             for line in fh:    
@@ -1685,11 +1685,11 @@ class timeSeries(object):
                     test=1                                                                                      
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
-            print 'No file : %s' %(filename)            
+            print('No file : %s' %(filename))
         except ValueError:
-            print 'pb at line %d : Is it really .tsf (or .TSF) format? '%(i)
+            print('pb at line %d : Is it really .tsf (or .TSF) format? '%(i))
         except IndexError:
-            print 'pb at line %d : check raw data file: possibly last line?'%(i)  
+            print('pb at line %d : check raw data file: possibly last line?'%(i))
         fh.close()        
         
     def populateFromEternaFile(self,filename,channel):
@@ -1705,7 +1705,7 @@ class timeSeries(object):
 
             PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load data')   
             
-            print "number of lines: %d"%len([1 for line in  open(filename, 'r')])
+            print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
             PBAR.show()
             test=0
             for line in fh:    
@@ -1733,11 +1733,11 @@ class timeSeries(object):
                     test=1                                                                                      
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
-            print 'No file : %s' %(filename)            
+            print('No file : %s' %(filename))
         except ValueError:
-            print 'pb at line %d : Is it really eterna format? '%(i)
+            print('pb at line %d : Is it really eterna format? '%(i))
         except IndexError:
-            print 'pb at line %d : check raw data file: possibly last line?'%(i)  
+            print('pb at line %d : check raw data file: possibly last line?'%(i))
         fh.close() 
         
     def interpolateOnGivenTimes(self,t):
@@ -1782,13 +1782,13 @@ def read_start_end_dates(filename):
         return start_end_dates             
     except IOError:
         #si ça ne marche pas, affiche ce message et continue le prog
-        print 'No file : %s' %(filename)            
+        print('No file : %s' %(filename))
     except ValueError:
-        print 'pb at line %d : check data file'%(i)
+        print('pb at line %d : check data file'%(i))
         
                        
         
-class ProgressBar(QtGui.QWidget):
+class ProgressBar(QtWidgets.QWidget):
     """
     define progress bar
     """
@@ -1869,7 +1869,7 @@ class StaticDataSet(object):
             station_temp.station=int(vals[0])
             station_temp.grav=float(vals[1])
             station_temp.sd=float(vals[2])
-            print station_temp
+            print(station_temp)
             self.Station_dic[int(vals[0])]=station_temp
         file.close()        
 
@@ -1946,10 +1946,10 @@ class Station_static(object):
         """Override the built-in method 'print' when applied to such object
         
         """
-        print 'station name: %d'%(self.station)       
-        print 'altitude (m): %f'%(self.alt)   
-        print 'gravity (mgal): %f'%(self.grav) 
-        print 'SD (mgal): %f'%(self.sd)
+        print('station name: %d'%(self.station))
+        print('altitude (m): %f'%(self.alt))
+        print('gravity (mgal): %f'%(self.grav))
+        print('SD (mgal): %f'%(self.sd))
         return "you're welcome"
 
 
@@ -2038,12 +2038,12 @@ class LSdata(object):
         dof=float(self.dof)
         self.chi2c=dof*(chi_1_alpha*sqrt(2/(9*dof))+1-2/(9*dof))**3
         
-        print "SD a posteriori: %6.2f"%float(self.SDaposteriori)
-        print "chi square value: %6.2f"%float(self.chi2)
-        print "critical chi square value: %6.2f"%float(self.chi2c)
+        print("SD a posteriori: %6.2f"%float(self.SDaposteriori))
+        print("chi square value: %6.2f"%float(self.chi2))
+        print("critical chi square value: %6.2f"%float(self.chi2c))
         
         if self.chi2<self.chi2c:
-            print "Chi-test accepted"
+            print("Chi-test accepted")
         else:
-            print "Chi-test rejected"
+            print("Chi-test rejected")
         
