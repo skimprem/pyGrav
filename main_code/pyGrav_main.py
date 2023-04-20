@@ -169,10 +169,10 @@ class mainProg(QtWidgets.QMainWindow):
         data_objects module with the appropriate options.
         """
         # open file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)                
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)                
         campaigndata=Campaign()
         #populate a Campaign object
-        campaigndata.readRawDataFile(fname)
+        campaigndata.readRawDataFile(fname[0])
         self.campaigndata=campaigndata
         if fname:
             #create new window and set as central Widget:
@@ -180,14 +180,14 @@ class mainProg(QtWidgets.QMainWindow):
             self.setCentralWidget(surveySelectionWin)        
             self.statusBar().showMessage("Please choose survey selection method")
             # create buttons and actions
-            surveySelectionWin.btn1 = QtGui.QPushButton('automatic survey selection', self)
+            surveySelectionWin.btn1 = QtWidgets.QPushButton('automatic survey selection', self)
             surveySelectionWin.btn1.clicked.connect(self.automaticSurveySelection)
-            surveySelectionWin.btn2 = QtGui.QPushButton('Load survey dates file', self)
+            surveySelectionWin.btn2 = QtWidgets.QPushButton('Load survey dates file', self)
             surveySelectionWin.btn2.clicked.connect(self.load_start_end_dates)
-            surveySelectionWin.btn3 = QtGui.QPushButton('Single survey selection', self)
+            surveySelectionWin.btn3 = QtWidgets.QPushButton('Single survey selection', self)
             surveySelectionWin.btn3.clicked.connect(self.askUserSingleSurvey)                        
             #locations                
-            grid = QtGui.QGridLayout()
+            grid = QtWidgets.QGridLayout()
             grid.addWidget(surveySelectionWin.btn1,0,0,1,1)
             grid.addWidget(surveySelectionWin.btn2,1,0,1,1)  
             grid.addWidget(surveySelectionWin.btn3,2,0,1,1)          
@@ -223,9 +223,9 @@ class mainProg(QtWidgets.QMainWindow):
         base station should always be the same and is requested to the user
         """
         # ask for hierarchical file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)                        
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)                        
         # ask for base station number
-        text, ok = QtGui.QInputDialog.getText(self, 'Input parameters', 
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input parameters', 
             'Base station?')        
         if ok:
             self.base_station=int(text)    
@@ -264,12 +264,12 @@ class mainProg(QtWidgets.QMainWindow):
         self.setCentralWidget(simpleDiffSelectionWin)        
         self.statusBar().showMessage("Please choose simple difference loading method")
         # create buttons and actions
-        simpleDiffSelectionWin.btn1 = QtGui.QPushButton('Load single simple differences file', self)
+        simpleDiffSelectionWin.btn1 = QtWidgets.QPushButton('Load single simple differences file', self)
         simpleDiffSelectionWin.btn1.clicked.connect(self.openSingleSimpleDiff)
-        simpleDiffSelectionWin.btn2 = QtGui.QPushButton('Load several simple differences files', self)
+        simpleDiffSelectionWin.btn2 = QtWidgets.QPushButton('Load several simple differences files', self)
         simpleDiffSelectionWin.btn2.clicked.connect(self.openSeveralSimpleDiff)                       
         #locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.addWidget(simpleDiffSelectionWin.btn1,0,0,1,1)
         grid.addWidget(simpleDiffSelectionWin.btn2,1,0,1,1)  
         simpleDiffSelectionWin.setLayout(grid)   
@@ -290,10 +290,10 @@ class mainProg(QtWidgets.QMainWindow):
         self.setCentralWidget(simpleDiffSelectionWin)        
         self.statusBar().showMessage("Please choose simple difference loading method")
         # create buttons and actions
-        simpleDiffSelectionWin.btn1 = QtGui.QPushButton('Load single simple differences file', self)
+        simpleDiffSelectionWin.btn1 = QtWidgets.QPushButton('Load single simple differences file', self)
         simpleDiffSelectionWin.btn1.clicked.connect(self.openSingleSimpleDiff_static)                     
         #locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.addWidget(simpleDiffSelectionWin.btn1,0,0,1,1)
         simpleDiffSelectionWin.setLayout(grid)   
         simpleDiffSelectionWin.setWindowTitle('Simple differences Loading')    
@@ -311,7 +311,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
 
         # ask for data file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
         survname=datetime(1990,2,11)
         survey=Survey(ChannelList(),str(survname.date()))
         survey.readSimpleDiff(fname)
@@ -328,7 +328,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
 
         # ask for data file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
         survname=datetime(1990,2,11)
         staticdataset=StaticDataSet()
         staticdataset.readSimpleDiff_static(fname)
@@ -343,7 +343,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
      
         # ask for hierarchical file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)            
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)            
         # open hierarchical file
         f=open(fname,'r')  
         for line in f:
@@ -382,11 +382,11 @@ class mainProg(QtWidgets.QMainWindow):
         #set the survey selection option required by the survey populating 
         #function:
         self.survey_selection_option=1
-        text, ok = QtGui.QInputDialog.getText(self, 'Input parameters', 
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input parameters', 
             'time threshold (hr)')        
         if ok:
             self.t_threshold=int(text)
-            text, ok2 = QtGui.QInputDialog.getText(self, 'Input parameters', 
+            text, ok2 = QtWidgets.QInputDialog.getText(self, 'Input parameters', 
             'base station=cycling station? (1=y/0=n)')        
             if ok2:
                 self.base_cycling_station=int(text)
@@ -411,7 +411,7 @@ class mainProg(QtWidgets.QMainWindow):
         self.survey_selection_option=2
         print('hold on a sec')
         self.statusBar().showMessage("Hold on a sec")        
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)          
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)          
         self.surveydates=read_start_end_dates(fname)        
         #call the next generic step of the survey selection process        
         self.baseStationSelection()     
@@ -433,24 +433,24 @@ class mainProg(QtWidgets.QMainWindow):
         chooseSingleSurvey.hr=QtWidgets.QLabel('hr')
         chooseSingleSurvey.mn=QtWidgets.QLabel('mn')
         chooseSingleSurvey.ss=QtWidgets.QLabel('ss')
-        chooseSingleSurvey.yrEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.monthEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.dayEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.hrEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.mnEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.ssEdit=QtGui.QLineEdit()
-        chooseSingleSurvey.yrEditend=QtGui.QLineEdit()
-        chooseSingleSurvey.monthEditend=QtGui.QLineEdit()
-        chooseSingleSurvey.dayEditend=QtGui.QLineEdit()
-        chooseSingleSurvey.hrEditend=QtGui.QLineEdit()
-        chooseSingleSurvey.mnEditend=QtGui.QLineEdit()
-        chooseSingleSurvey.ssEditend=QtGui.QLineEdit()        
+        chooseSingleSurvey.yrEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.monthEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.dayEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.hrEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.mnEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.ssEdit=QtWidgets.QLineEdit()
+        chooseSingleSurvey.yrEditend=QtWidgets.QLineEdit()
+        chooseSingleSurvey.monthEditend=QtWidgets.QLineEdit()
+        chooseSingleSurvey.dayEditend=QtWidgets.QLineEdit()
+        chooseSingleSurvey.hrEditend=QtWidgets.QLineEdit()
+        chooseSingleSurvey.mnEditend=QtWidgets.QLineEdit()
+        chooseSingleSurvey.ssEditend=QtWidgets.QLineEdit()        
         # create buttons and actions
-        chooseSingleSurvey.btn1 = QtGui.QPushButton('ok', self)
+        chooseSingleSurvey.btn1 = QtWidgets.QPushButton('ok', self)
         chooseSingleSurvey.btn1.clicked.connect(lambda : self.setSingleSurvey(chooseSingleSurvey))
                           
         #locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.addWidget(QtWidgets.QLabel('Start date'),1,1)
         grid.addWidget(QtWidgets.QLabel('End date'),1,2)        
         grid.addWidget(chooseSingleSurvey.yr,2,0)
@@ -500,22 +500,22 @@ class mainProg(QtWidgets.QMainWindow):
         self.setCentralWidget(baseStationSelectionWin)        
         self.statusBar().showMessage("Please enter base station number")
         
-        text, ok = QtGui.QInputDialog.getText(self, 'Input parameters', 
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input parameters', 
             'Enter base station number')        
         if ok:
             self.populateSurveyDictionnary(int(text))       
         
         ############### other option for displaying a selection screen:
 #        # create buttons and actions
-#        baseStationSelectionWin.baseStationEdit=QtGui.QLineEdit()
-#        baseStationSelectionWin.btn1 = QtGui.QPushButton('ok', self)
+#        baseStationSelectionWin.baseStationEdit=QtWidgets.QLineEdit()
+#        baseStationSelectionWin.btn1 = QtWidgets.QPushButton('ok', self)
 #        baseStationSelectionWin.btn1.clicked.connect(lambda : self.populateSurveyDictionnary(int(baseStationSelectionWin.baseStationEdit.text())))                       
 #        #locations                
-#        hbox = QtGui.QHBoxLayout()
+#        hbox = QtWidgets.QHBoxLayout()
 #        hbox.addWidget(baseStationSelectionWin.baseStationEdit)
 #        hbox.addWidget(baseStationSelectionWin.btn1)  
 #        hbox.addStretch(1)
-#        vbox = QtGui.QVBoxLayout()
+#        vbox = QtWidgets.QVBoxLayout()
 #        vbox.addWidget(QtWidgets.QLabel('Enter base station number'))
 #        vbox.addLayout(hbox)
 #        vbox.addStretch(1)
@@ -570,17 +570,17 @@ class mainProg(QtWidgets.QMainWindow):
         tidecorrwin=QtWidgets.QWidget()
         self.statusBar().showMessage("Please choose tidal correction method")
 
-        tidecorrwin.btn1 = QtGui.QPushButton('Use CG5 tide correction', self)
+        tidecorrwin.btn1 = QtWidgets.QPushButton('Use CG5 tide correction', self)
         tidecorrwin.btn1.clicked.connect(self.useCG5TideCorr)        
-        tidecorrwin.btn2 = QtGui.QPushButton('Use synthetic tides from predict', self)        
+        tidecorrwin.btn2 = QtWidgets.QPushButton('Use synthetic tides from predict', self)        
         tidecorrwin.btn2.clicked.connect(self.usePredict)        
-        tidecorrwin.btn3 = QtGui.QPushButton('Use synthetic tides from Agnew', self)        
+        tidecorrwin.btn3 = QtWidgets.QPushButton('Use synthetic tides from Agnew', self)        
         tidecorrwin.btn3.clicked.connect(self.useAgnew)             
-        tidecorrwin.btn4 = QtGui.QPushButton('Load time series', self)
+        tidecorrwin.btn4 = QtWidgets.QPushButton('Load time series', self)
         tidecorrwin.btn4.clicked.connect(self.loadTideTimeSeries)
                 
         #button locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
 #        grid.setSpacing(10)
         grid.addWidget(tidecorrwin.btn1,0,0,1,1)
         grid.addWidget(tidecorrwin.btn2,1,0,1,1)  
@@ -621,7 +621,7 @@ class mainProg(QtWidgets.QMainWindow):
         column.
         """
         self.statusBar().showMessage("Loading synthetic tide data")        
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', 
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 
                 'home')
                 
         Tides=timeSeries()
@@ -646,17 +646,17 @@ class mainProg(QtWidgets.QMainWindow):
         enterCoordinates.lat=QtWidgets.QLabel('latitude')
         enterCoordinates.lon=QtWidgets.QLabel('longitude')
         enterCoordinates.alt=QtWidgets.QLabel('altitude')
-        enterCoordinates.latEdit=QtGui.QLineEdit()
-        enterCoordinates.lonEdit=QtGui.QLineEdit()
-        enterCoordinates.altEdit=QtGui.QLineEdit()    
+        enterCoordinates.latEdit=QtWidgets.QLineEdit()
+        enterCoordinates.lonEdit=QtWidgets.QLineEdit()
+        enterCoordinates.altEdit=QtWidgets.QLineEdit()    
         # create buttons and actions
-        enterCoordinates.btn1 = QtGui.QPushButton('Use default tidal parameters', self)
+        enterCoordinates.btn1 = QtWidgets.QPushButton('Use default tidal parameters', self)
         enterCoordinates.btn1.clicked.connect(lambda : self.launchPredict(enterCoordinates,option=1))
-        enterCoordinates.btn2 = QtGui.QPushButton('Load tidal parameters file', self)
+        enterCoordinates.btn2 = QtWidgets.QPushButton('Load tidal parameters file', self)
         enterCoordinates.btn2.clicked.connect(lambda : self.launchPredict(enterCoordinates,option=2))        
                   
         #locations                
-        grid = QtGui.QGridLayout()     
+        grid = QtWidgets.QGridLayout()     
         grid.addWidget(enterCoordinates.lat,1,0)
         grid.addWidget(enterCoordinates.latEdit,1,1) 
         grid.addWidget(enterCoordinates.lon,2,0)
@@ -720,7 +720,7 @@ class mainProg(QtWidgets.QMainWindow):
             tides.close()
         if option==2:
             #Ask the user to provide tide files
-            fname = QtGui.QFileDialog.getOpenFileName(self, 'Load tidal parameters file', 
+            fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Load tidal parameters file', 
                 self.data_path)        
             tides=open(fname,'r')
             for line in tides:
@@ -773,17 +773,17 @@ class mainProg(QtWidgets.QMainWindow):
         enterCoordinates.lat=QtWidgets.QLabel('latitude')
         enterCoordinates.lon=QtWidgets.QLabel('longitude')
         enterCoordinates.alt=QtWidgets.QLabel('altitude')
-        enterCoordinates.latEdit=QtGui.QLineEdit()
-        enterCoordinates.lonEdit=QtGui.QLineEdit()
-        enterCoordinates.altEdit=QtGui.QLineEdit()    
+        enterCoordinates.latEdit=QtWidgets.QLineEdit()
+        enterCoordinates.lonEdit=QtWidgets.QLineEdit()
+        enterCoordinates.altEdit=QtWidgets.QLineEdit()    
         # create buttons and actions
-        enterCoordinates.btn1 = QtGui.QPushButton('OK', self)
+        enterCoordinates.btn1 = QtWidgets.QPushButton('OK', self)
         enterCoordinates.btn1.clicked.connect(lambda : self.launchAgnew(enterCoordinates,option=1))
-        #enterCoordinates.btn2 = QtGui.QPushButton('Load tidal parameters file', self)
+        #enterCoordinates.btn2 = QtWidgets.QPushButton('Load tidal parameters file', self)
         #enterCoordinates.btn2.clicked.connect(lambda : self.launchPredict(enterCoordinates,option=2))        
                   
         #locations                
-        grid = QtGui.QGridLayout()     
+        grid = QtWidgets.QGridLayout()     
         grid.addWidget(enterCoordinates.lat,1,0)
         grid.addWidget(enterCoordinates.latEdit,1,1) 
         grid.addWidget(enterCoordinates.lon,2,0)
@@ -829,7 +829,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
 
         # open file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open tidal parameters file (BLQ)',self.data_path) 
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open tidal parameters file (BLQ)',self.data_path) 
         
         #read amplitudes and phases:
         fh = open(fname, 'r')
@@ -874,7 +874,7 @@ class mainProg(QtWidgets.QMainWindow):
         structure, nor saved in an output file, this could be updated
         """
         self.statusBar().showMessage("Loading Atmospheric loading time series")        
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', 
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 
                 'home')
                         
         Atm=timeSeries()
@@ -978,7 +978,7 @@ class mainProg(QtWidgets.QMainWindow):
         mess="check surveys, loops and stations to keep for processing/saving (left panel) and select data on each station (middle panel). click the ""update plots"" button to refresh."
         self.statusBar().showMessage(mess)         
         # and the final layout:
-        layout_final = QtGui.QGridLayout() 
+        layout_final = QtWidgets.QGridLayout() 
 
 
         #### now define display behaviour for all panels       
@@ -996,7 +996,7 @@ class mainProg(QtWidgets.QMainWindow):
         # center panel: table (station values)
         #instanciate a stationDataTableModel model object
         self.tablemodel = stationDataTableModel(self.campaigndata.survey_dic[keysurv[0]].loop_dic[keyloop[0]].station_dic[keysta[0]], self.dataselectionwin,keysurv[0],keyloop[0],keysta[0],)
-        self.tableview = QtGui.QTableView()
+        self.tableview = QtWidgets.QTableView()
         self.tableview.setModel(self.tablemodel)  
         self.tableview.resizeColumnsToContents()
         
@@ -1017,39 +1017,39 @@ class mainProg(QtWidgets.QMainWindow):
         
         self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
         # define some buttons with actions (signal/slot events) and line edits
-        updateplot_button = QtGui.QPushButton("&update plots",self)
+        updateplot_button = QtWidgets.QPushButton("&update plots",self)
         updateplot_button.clicked.connect(self.updatePlotTemp)
-        checkselected_button = QtGui.QPushButton("&check selected",self)
+        checkselected_button = QtWidgets.QPushButton("&check selected",self)
         checkselected_button.clicked.connect(self.checkSelected)  
-        uncheckselected_button = QtGui.QPushButton("&uncheck selected",self)
+        uncheckselected_button = QtWidgets.QPushButton("&uncheck selected",self)
         uncheckselected_button.clicked.connect(self.uncheckSelected)        
-        checkall_button = QtGui.QPushButton("&check all",self)
+        checkall_button = QtWidgets.QPushButton("&check all",self)
         checkall_button.clicked.connect(self.checkall)
-        uncheckall_button = QtGui.QPushButton("&uncheck all",self)
+        uncheckall_button = QtWidgets.QPushButton("&uncheck all",self)
         uncheckall_button.clicked.connect(self.uncheckall)  
-        #apply_tide_corr_button = QtGui.QPushButton("&tide correction",self)
+        #apply_tide_corr_button = QtWidgets.QPushButton("&tide correction",self)
         #apply_tide_corr_button.clicked.connect(self.applyTideCorrSingleStation)          
         autoselec_tilts=QtWidgets.QWidget()        
         autoselec_sd=QtWidgets.QWidget()         
         autoselec_grav=QtWidgets.QWidget()   
         autoselec_dur=QtWidgets.QWidget()              
         autoselec_all=QtWidgets.QWidget()                    
-        autoselec_tilts.button = QtGui.QPushButton("&auto uncheck tilts >",self)
+        autoselec_tilts.button = QtWidgets.QPushButton("&auto uncheck tilts >",self)
         autoselec_tilts.button.clicked.connect(lambda : self.autoselectFct_tilt(autoselec_tilts))           
-        autoselec_sd.button = QtGui.QPushButton("&auto uncheck SD >",self)
+        autoselec_sd.button = QtWidgets.QPushButton("&auto uncheck SD >",self)
         autoselec_sd.button.clicked.connect(lambda : self.autoselectFct_sd(autoselec_sd))        
-        autoselec_grav.button = QtGui.QPushButton("&auto uncheck g >",self)
+        autoselec_grav.button = QtWidgets.QPushButton("&auto uncheck g >",self)
         autoselec_grav.button.clicked.connect(lambda : self.autoselectFct_grav(autoselec_grav))   
-        autoselec_dur.button = QtGui.QPushButton("&auto uncheck dur <>",self)
+        autoselec_dur.button = QtWidgets.QPushButton("&auto uncheck dur <>",self)
         autoselec_dur.button.clicked.connect(lambda : self.autoselectFct_dur(autoselec_dur))          
-        autoselec_all.button = QtGui.QPushButton("&apply to all data",self)
+        autoselec_all.button = QtWidgets.QPushButton("&apply to all data",self)
         autoselec_all.button.clicked.connect(lambda : self.autoselectFct_all(autoselec_tilts.val,autoselec_sd.val,autoselec_grav.val,autoselec_dur.val))            
-        autoselec_tilts.val=QtGui.QLineEdit()
-        autoselec_sd.val=QtGui.QLineEdit()
-        autoselec_grav.val=QtGui.QLineEdit()
-        autoselec_dur.val=QtGui.QLineEdit()
+        autoselec_tilts.val=QtWidgets.QLineEdit()
+        autoselec_sd.val=QtWidgets.QLineEdit()
+        autoselec_grav.val=QtWidgets.QLineEdit()
+        autoselec_dur.val=QtWidgets.QLineEdit()
         
-        validate_button=QtGui.QPushButton("\n OK \n",self)
+        validate_button=QtWidgets.QPushButton("\n OK \n",self)
         validate_button.clicked.connect(self.finishDataSelection)
         
         #### add widgets to the layout
@@ -1062,8 +1062,8 @@ class mainProg(QtWidgets.QMainWindow):
         
         # for the right panel (options & display):        
         # create sublayouts (allow the line edit to be of finite extent)
-        layout_options = QtGui.QGridLayout()         
-        grid = QtGui.QGridLayout() 
+        layout_options = QtWidgets.QGridLayout()         
+        grid = QtWidgets.QGridLayout() 
         
         # fill subplayouts:
         grid.addWidget(self.canvas,3,0,19,4)
@@ -1424,13 +1424,13 @@ class mainProg(QtWidgets.QMainWindow):
 
         self.statusBar().showMessage("Please choose drift adjustment method")
 
-        driftAdjWin.btn1 = QtGui.QPushButton('Use MCGravi', self)
+        driftAdjWin.btn1 = QtWidgets.QPushButton('Use MCGravi', self)
         driftAdjWin.btn1.clicked.connect(self.useMCGraviDriftAdj)        
-        driftAdjWin.btn2 = QtGui.QPushButton('Use datum-free least-square inversion', self)
+        driftAdjWin.btn2 = QtWidgets.QPushButton('Use datum-free least-square inversion', self)
         driftAdjWin.btn2.clicked.connect(self.useLSDriftAdj)               
                 
         #button locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
 #        grid.setSpacing(10)
         grid.addWidget(driftAdjWin.btn1,0,0,1,1)
         grid.addWidget(driftAdjWin.btn2,1,0,1,1)  
@@ -1467,19 +1467,19 @@ class mainProg(QtWidgets.QMainWindow):
         LSOptions.alpha=QtWidgets.QLabel('Significance level for global model test')        
         LSOptions.woutfiles=QtWidgets.QLabel('Write Output Files (y/n)?')        
        
-        LSOptions.drift_tEdit=QtGui.QLineEdit('1')
-        LSOptions.drift_kEdit=QtGui.QLineEdit('0')
-        LSOptions.sigma_factorEdit=QtGui.QLineEdit('1')
-        LSOptions.sigma_addEdit=QtGui.QLineEdit('0.005')
-        LSOptions.alphaEdit=QtGui.QLineEdit('0.05')
-        LSOptions.woutfilesEdit=QtGui.QLineEdit('n')
+        LSOptions.drift_tEdit=QtWidgets.QLineEdit('1')
+        LSOptions.drift_kEdit=QtWidgets.QLineEdit('0')
+        LSOptions.sigma_factorEdit=QtWidgets.QLineEdit('1')
+        LSOptions.sigma_addEdit=QtWidgets.QLineEdit('0.005')
+        LSOptions.alphaEdit=QtWidgets.QLineEdit('0.05')
+        LSOptions.woutfilesEdit=QtWidgets.QLineEdit('n')
              
         # create buttons and actions
-        LSOptions.btn1 = QtGui.QPushButton('ok', self)
+        LSOptions.btn1 = QtWidgets.QPushButton('ok', self)
         LSOptions.btn1.clicked.connect(lambda : self.lsDriftAdj(LSOptions))
                           
         #locations                
-        grid = QtGui.QGridLayout()       
+        grid = QtWidgets.QGridLayout()       
         grid.addWidget(LSOptions.drift_t,1,0)
         grid.addWidget(LSOptions.drift_tEdit,1,1)
         grid.addWidget(LSOptions.drift_k,2,0)
@@ -1575,17 +1575,17 @@ class mainProg(QtWidgets.QMainWindow):
         mcGraviOptions.drift_k=QtWidgets.QLabel('temperature drift polynomial?')        
         mcGraviOptions.sigma_add=QtWidgets.QLabel('SD add to data (mgal)')        
         
-        mcGraviOptions.modeEdit=QtGui.QLineEdit('1')
-        mcGraviOptions.drift_tEdit=QtGui.QLineEdit('1')
-        mcGraviOptions.drift_kEdit=QtGui.QLineEdit('0')
-        mcGraviOptions.sigma_addEdit=QtGui.QLineEdit('0.005')
+        mcGraviOptions.modeEdit=QtWidgets.QLineEdit('1')
+        mcGraviOptions.drift_tEdit=QtWidgets.QLineEdit('1')
+        mcGraviOptions.drift_kEdit=QtWidgets.QLineEdit('0')
+        mcGraviOptions.sigma_addEdit=QtWidgets.QLineEdit('0.005')
              
         # create buttons and actions
-        mcGraviOptions.btn1 = QtGui.QPushButton('ok', self)
+        mcGraviOptions.btn1 = QtWidgets.QPushButton('ok', self)
         mcGraviOptions.btn1.clicked.connect(lambda : self.writeMCGraviInputfiles(mcGraviOptions))
                           
         #locations                
-        grid = QtGui.QGridLayout()       
+        grid = QtWidgets.QGridLayout()       
         grid.addWidget(mcGraviOptions.mode,1,0)
         grid.addWidget(mcGraviOptions.modeEdit,1,1) 
         grid.addWidget(mcGraviOptions.drift_t,2,0)
@@ -1754,7 +1754,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
         #axis=0 to sort on first axis
         survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1],axis=0)
-        surveySelectList=QtGui.QListWidget()
+        surveySelectList=QtWidgets.QListWidget()
         self.statusBar().showMessage("Please choose reference survey (double-click)")
         
         for surv in survnames:
@@ -1784,12 +1784,12 @@ class mainProg(QtWidgets.QMainWindow):
         self.statusBar().showMessage("Please choose double differences method")
         
         # create buttons and actions
-        ddSelectionWin.btn1 = QtGui.QPushButton('Classic double differences', self)
+        ddSelectionWin.btn1 = QtWidgets.QPushButton('Classic double differences', self)
         ddSelectionWin.btn1.clicked.connect(self.ddClassic)
-        ddSelectionWin.btn2 = QtGui.QPushButton('Double differences from network mean', self)
+        ddSelectionWin.btn2 = QtWidgets.QPushButton('Double differences from network mean', self)
         ddSelectionWin.btn2.clicked.connect(self.ddFromNetworkMean)                        
         #locations                
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.addWidget(ddSelectionWin.btn1,0,0,1,1)
         grid.addWidget(ddSelectionWin.btn2,1,0,1,1)  
         ddSelectionWin.setLayout(grid)   
@@ -1844,7 +1844,7 @@ class mainProg(QtWidgets.QMainWindow):
         Correct all times from an offset: when GMT time entered in CG5 is bad.
         """
         #ask for time difference to apply
-        text, ok = QtGui.QInputDialog.getText(self, 'Input parameters', 
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input parameters', 
             'time offset to apply (hr)?')        
         if ok:
             self.t_offset=int(text)                           
@@ -1873,14 +1873,14 @@ class mainProg(QtWidgets.QMainWindow):
         mess="select a survey to see simple differences plots"
         self.statusBar().showMessage(mess)         
         # and the final layout:
-        layout_final = QtGui.QGridLayout() 
+        layout_final = QtWidgets.QGridLayout() 
 
 
         #### now define display behaviour for all panels       
         
         # Left panel: 
         survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1]
-        self.surveySelectList=QtGui.QListWidget()
+        self.surveySelectList=QtWidgets.QListWidget()
         self.statusBar().showMessage("Please choose a survey (double-click)")        
         for surv in survnames:
             QListWidgetItem(str(surv[1]),self.surveySelectList)                
@@ -1908,8 +1908,8 @@ class mainProg(QtWidgets.QMainWindow):
         
         # for the right panel (options & display):        
         # create sublayouts (allow the line edit to be of finite extent)
-        layout_options = QtGui.QGridLayout()         
-        grid = QtGui.QGridLayout() 
+        layout_options = QtWidgets.QGridLayout()         
+        grid = QtWidgets.QGridLayout() 
         
         # fill subplayouts:
         grid.addWidget(self.canvas,3,0,19,4)
@@ -1972,7 +1972,7 @@ class mainProg(QtWidgets.QMainWindow):
         """
         """
          # ask for data file
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
         self.campaigndata.corrHeightBouguer(fname)        
         
         
@@ -2178,10 +2178,10 @@ class ProgressBar(QtWidgets.QWidget):
     
     def __init__(self, parent=None, total=20, textmess='Progress'):
         super(ProgressBar, self).__init__(parent)
-        self.progressbar = QtGui.QProgressBar()
+        self.progressbar = QtWidgets.QProgressBar()
         self.progressbar.setMinimum(1)
         self.progressbar.setMaximum(total)
-        main_layout = QtGui.QGridLayout()
+        main_layout = QtWidgets.QGridLayout()
         main_layout.addWidget(self.progressbar, 0, 1)
         self.setLayout(main_layout)
         self.setWindowTitle(textmess)

@@ -1795,10 +1795,10 @@ class ProgressBar(QtWidgets.QWidget):
     
     def __init__(self, parent=None, total=20, textmess='Progress'):
         super(ProgressBar, self).__init__(parent)
-        self.progressbar = QtGui.QProgressBar()
+        self.progressbar = QtWidgets.QProgressBar()
         self.progressbar.setMinimum(1)
         self.progressbar.setMaximum(total)
-        main_layout = QtGui.QGridLayout()
+        main_layout = QtWidgets.QGridLayout()
         main_layout.addWidget(self.progressbar, 0, 1)
         self.setLayout(main_layout)
         self.setWindowTitle(textmess)
