@@ -37,7 +37,6 @@ processing functions, called from the main program.
 from time import time
 import glob, os
 from copy import *
-from PyQt5 import QtGui, QtCore
 from PyQt5 import QtWidgets
 from datetime import *
 from synthetic_tides import *
@@ -259,7 +258,7 @@ class ChannelList(object):
         Arguments:
         - subdict:          subdictionaries to fill from
         """                
-        for keyssubobj,subobj in sorted(subdict.iteritems(), key=lambda x: x[1].t[1]):    
+        for keyssubobj,subobj in sorted(subdict.items(), key=lambda x: x[1].t[1]):    
             for i in range(len(subobj.t)):              
                 self.line.append(subobj.line[i])
                 self.station.append(subobj.station[i])
@@ -317,44 +316,74 @@ class Campaign(ChannelList):
         an error is raised and the user is asked for checking the data file 
         manually
         """    
-   
+        fh = open(filename, 'r')
+        grav_type = ''
+        for line in fh:
+            if line[0] == '/':
+                if line.split('/')[1].split()[0] == 'CG-5':
+                    grav_type = 'cg5'
+                    break
+                elif line.split('/')[1].split()[0] == 'CG-6':
+                    grav_type = 'cg6'
+                    break
+                else:
+                    grav_type = 'unknown'
+                
         try:
             #essaye d'ouvrir le fichier
-            fh = open(filename, 'r')
             i=0
-            PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load raw data')   
+            # PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load raw data')   
             print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
-            PBAR.show()
-            for line in fh:    
-                PBAR.progressbar.setValue(i)
-                i+=1
-                # Clean line
-                line = line.strip()
-                # Skip blank and comment lines
-                if (not line) or (line[0] == '/') or (line[0] == 'L'): continue
-        	     #parse string line first with respect to '/' caracters (used in the date format), 
-        	     #then with ':' (used for the time display), eventually with the classic ' '
-                vals_temp1=line.split('/')
-                vals_temp2=vals_temp1[0].split(':')
-                vals_temp3=vals_temp2[0].split()                
-                vals_temp4=vals_temp2[2].split()
+            # PBAR.show()
+            if grav_type == 'cg5':
+                for line in fh:    
+                    # PBAR.progressbar.setValue(i)
+                    i+=1
+                    # Clean line
+                    line = line.strip()
+                    # Skip blank and comment lines
+                    if (not line) or (line[0] == '/') or (line[0] == 'L'):
+                        continue
+                    #parse string line first with respect to '/' caracters (used in the date format), 
+                    #then with ':' (used for the time display), eventually with the classic ' '
+                    vals_temp1=line.split('/')
+                    vals_temp2=vals_temp1[0].split(':')
+                    vals_temp3=vals_temp2[0].split()                
+                    vals_temp4=vals_temp2[2].split()
 
-                # fill object properties:
-                self.line.append(float(vals_temp3[0]))
-                self.station.append(float(vals_temp3[1]))
-                self.alt.append(float(vals_temp3[2]))
-                self.grav.append(float(vals_temp3[3]))
-                self.sd.append(float(vals_temp3[4]))
-                self.tiltx.append(float(vals_temp3[5]))
-                self.tilty.append(float(vals_temp3[6]))
-                self.temp.append(float(vals_temp3[7]))
-                self.etc.append(float(vals_temp3[8]))
-                self.dur.append(int(vals_temp3[9]))
-                self.rej.append(int(vals_temp3[10]))
-                self.t.append(datetime(int(vals_temp4[3]),int(vals_temp1[1]),\
-                int(vals_temp1[2]),int(vals_temp3[11]),int(vals_temp2[1]),\
-                int(vals_temp4[0])))             
-                self.keepdata.append(1)                                                                                         
+                    # fill object properties:
+                    self.line.append(float(vals_temp3[0]))
+                    self.station.append(float(vals_temp3[1]))
+                    self.alt.append(float(vals_temp3[2]))
+                    self.grav.append(float(vals_temp3[3]))
+                    self.sd.append(float(vals_temp3[4]))
+                    self.tiltx.append(float(vals_temp3[5]))
+                    self.tilty.append(float(vals_temp3[6]))
+                    self.temp.append(float(vals_temp3[7]))
+                    self.etc.append(float(vals_temp3[8]))
+                    self.dur.append(int(vals_temp3[9]))
+                    self.rej.append(int(vals_temp3[10]))
+                    self.t.append(datetime(int(vals_temp4[3]),int(vals_temp1[1]),\
+                    int(vals_temp1[2]),int(vals_temp3[11]),int(vals_temp2[1]),\
+                    int(vals_temp4[0])))             
+                    self.keepdata.append(1)                                                                                         
+            elif grav_type == 'cg6':
+                for line in fh:
+                    # PBAR.progressbar.setValue(i)
+                    i+=1
+                    # Clean line
+                    line = line.strip()
+                    # Skip blank and comment lines
+                    if (not line) or (line[0] == '/') or (line[0] == 'L'):
+                        continue
+                    #parse string line first with respect to '/' caracters (used in the date format), 
+                    #then with ':' (used for the time display), eventually with the classic ' '
+                    vals_temp1=line.split('/')
+                    vals_temp2=vals_temp1[0].split(':')
+                    vals_temp3=vals_temp2[0].split()                
+                    vals_temp4=vals_temp2[2].split()
+
+
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
             print('No file : %s' %(filename))
@@ -536,16 +565,16 @@ class Campaign(ChannelList):
         
         if option==2:
             #only for option 2:
-            mean_ref_surv=np.mean([sta[1] for staid,sta in referencesurvey.output_dic.iteritems()])        
+            mean_ref_surv=np.mean([sta[1] for staid,sta in referencesurvey.output_dic.items()])        
         
-        for keysurv,surv in self.survey_dic.iteritems():
+        for keysurv,surv in self.survey_dic.items():
             if surv.keepitem==1:
                 #empty survey
                 survtmp=Survey(ChannelList(),surv.name)             
                 DD.survey_dic[keysurv]=survtmp
         
                 if option==1: #classic double differences
-                    for staid,sta in referencesurvey.output_dic.iteritems():
+                    for staid,sta in referencesurvey.output_dic.items():
                         try:
                             currdata=self.survey_dic[keysurv].output_dic[staid]                    
                             if currdata:
@@ -556,7 +585,7 @@ class Campaign(ChannelList):
                             pass
                 elif option==2: #double difference from network mean:
                     mean_curr_surv=[]
-                    for staid,sta in referencesurvey.output_dic.iteritems():
+                    for staid,sta in referencesurvey.output_dic.items():
                         try:
                             currdata=surv.output_dic[staid]                    
                             if currdata:
@@ -566,7 +595,7 @@ class Campaign(ChannelList):
                             pass
                     mean_curr_surv=np.mean(mean_curr_surv)         
                     
-                    for staid,sta in referencesurvey.output_dic.iteritems():
+                    for staid,sta in referencesurvey.output_dic.items():
                         try:
                             currdata=surv.output_dic[staid]                    
                             if currdata:
@@ -601,14 +630,14 @@ class Campaign(ChannelList):
         ###########
         #FORMAT 1:#
         ###########
-        survids=[survid for survid,surv in DD.survey_dic.iteritems()]
+        survids=[survid for survid,surv in DD.survey_dic.items()]
         survids=np.sort(survids)
         file1=open(filenameGrav+"1.dat",'w')
         file2=open(filenameSTD+"1.dat",'w')
         # print header        
         file1.write("date        ")
         file2.write("date        ")               
-        for staid,sta in referencesurvey.output_dic.iteritems():
+        for staid,sta in referencesurvey.output_dic.items():
             file1.write("%6d "%sta[0])
             file2.write("%6d "%sta[0])
         file1.write("\n")    
@@ -620,7 +649,7 @@ class Campaign(ChannelList):
             file1.write("%11s "%datetmp[0:10])
             file2.write("%11s "%datetmp[0:10])
             # print data
-            for staid,sta in referencesurvey.output_dic.iteritems():
+            for staid,sta in referencesurvey.output_dic.items():
                 try:
                     currdata=DD.survey_dic[surv].output_dic[staid]
                     if currdata:
@@ -650,7 +679,7 @@ class Campaign(ChannelList):
             file2.write(" %11s"%datetmp[0:10])
         file1.write("\n")    
         file2.write("\n")      
-        for staid,sta in referencesurvey.output_dic.iteritems():
+        for staid,sta in referencesurvey.output_dic.items():
             file1.write("%4d "%sta[0])
             file2.write("%4d "%sta[0])
             for surv in survids:
@@ -681,9 +710,9 @@ class Campaign(ChannelList):
         file=open(filename,'w')
         stations=[]
 
-        for keysurvey,survey in self.survey_dic.iteritems():            
-            for keyloop,loop in self.survey_dic[keysurvey].loop_dic.iteritems():  
-                for keysta,station in self.survey_dic[keysurvey].loop_dic[keyloop].station_dic.iteritems():                  
+        for keysurvey,survey in self.survey_dic.items():            
+            for keyloop,loop in self.survey_dic[keysurvey].loop_dic.items():  
+                for keysta,station in self.survey_dic[keysurvey].loop_dic[keyloop].station_dic.items():                  
                     stations.append(station.station[0])
         
         stations=set(stations)
@@ -713,25 +742,25 @@ class Campaign(ChannelList):
             os.makedirs(output_root_dir)
             
         Mainfile.write("Directory %s\n"%output_root_dir)  
-        for survid,surv in datafordriftadj.survey_dic.iteritems():
+        for survid,surv in datafordriftadj.survey_dic.items():
             if surv.keepitem==1:
                 survdir=output_root_dir+os.sep+surv.name
                 if not os.path.exists(survdir):
                     os.makedirs(survdir)
                 #get number of loops
                 nloops=0
-                for loopid,loop in surv.loop_dic.iteritems():
+                for loopid,loop in surv.loop_dic.items():
                     if loop.keepitem==1:
                         nloops=nloops+1
                 # save survey characteristics        
                 Mainfile.write("Survey: %s nloops: %d directory: %s\n"%(surv.name,nloops,surv.name))     
                 j=0
                 file_list=[]
-                for loopid,loop in surv.loop_dic.iteritems():
+                for loopid,loop in surv.loop_dic.items():
                     if loop.keepitem==1:
                         j=j+1
                         #get year and julian day:
-                        stakeys=[key for key,sta in loop.station_dic.iteritems() if sta.keepitem==1]
+                        stakeys=[key for key,sta in loop.station_dic.items() if sta.keepitem==1]
                         datefirststa=loop.station_dic[stakeys[1]].t[0].timetuple()
                         yr=str(datefirststa.tm_year)
                         jday="%03d"%datefirststa.tm_yday
@@ -752,9 +781,9 @@ class Campaign(ChannelList):
         file=open(fname,'r')        
         lines=file.readlines()
                 
-        for survid,surv in self.survey_dic.iteritems():
+        for survid,surv in self.survey_dic.items():
             surv.height_bouguer_corr='ok'
-            for sta_id,sta in surv.output_dic.iteritems():
+            for sta_id,sta in surv.output_dic.items():
                 #initiate to NaNs
                 sta=sta+(np.NaN,np.NaN,)
                 for line in lines:
@@ -783,7 +812,7 @@ class Campaign(ChannelList):
         PBAR1 = ProgressBar(total=len(self.survey_dic.keys()),textmess='surveys')   
         PBAR1.show()
         i=1
-        for keysurv,surv in self.survey_dic.iteritems():
+        for keysurv,surv in self.survey_dic.items():
             PBAR1.progressbar.setValue(i)
             i=i+1   
             if any(self.survey_dic[keysurv].t):
@@ -795,7 +824,7 @@ class Campaign(ChannelList):
             PBAR2 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic.keys()),textmess='loops')   
             PBAR2.show()
             j=1
-            for keyloop,loop in self.survey_dic[keysurv].loop_dic.iteritems():
+            for keyloop,loop in self.survey_dic[keysurv].loop_dic.items():
                 PBAR2.progressbar.setValue(j)
                 j=j+1
                 if any(self.survey_dic[keysurv].loop_dic[keyloop].t):
@@ -807,7 +836,7 @@ class Campaign(ChannelList):
                 PBAR3 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic[keyloop].station_dic.keys()),textmess='stations')   
                 PBAR3.show()
                 k=1
-                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     PBAR3.progressbar.setValue(k)
                     k=k+1
                     #get tides and round to µgal level
@@ -849,7 +878,7 @@ class Campaign(ChannelList):
         PBAR1 = ProgressBar(total=len(self.survey_dic.keys()),textmess='surveys')   
         PBAR1.show()
         i=1
-        for keysurv,surv in self.survey_dic.iteritems():
+        for keysurv,surv in self.survey_dic.items():
             PBAR1.progressbar.setValue(i)
             i=i+1   
             tidetemp=deepcopy(Tides)
@@ -861,7 +890,7 @@ class Campaign(ChannelList):
             PBAR2 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic.keys()),textmess='loops')   
             PBAR2.show()
             j=1
-            for keyloop,loop in self.survey_dic[keysurv].loop_dic.iteritems():
+            for keyloop,loop in self.survey_dic[keysurv].loop_dic.items():
                 PBAR2.progressbar.setValue(j)
                 j=j+1
                 tidetemp2=deepcopy(tidetemp)
@@ -873,7 +902,7 @@ class Campaign(ChannelList):
                 PBAR3 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic[keyloop].station_dic.keys()),textmess='stations')   
                 PBAR3.show()
                 k=1
-                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     PBAR3.progressbar.setValue(k)
                     k=k+1
                     tidetemp3=deepcopy(tidetemp2)
@@ -904,7 +933,7 @@ class Campaign(ChannelList):
         PBAR1 = ProgressBar(total=len(self.survey_dic.keys()),textmess='surveys')   
         PBAR1.show()
         i=1
-        for keysurv,surv in self.survey_dic.iteritems():
+        for keysurv,surv in self.survey_dic.items():
             PBAR1.progressbar.setValue(i)
             i=i+1   
             if any(self.survey_dic[keysurv].t):
@@ -915,7 +944,7 @@ class Campaign(ChannelList):
             PBAR2 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic.keys()),textmess='loops')   
             PBAR2.show()
             j=1
-            for keyloop,loop in self.survey_dic[keysurv].loop_dic.iteritems():
+            for keyloop,loop in self.survey_dic[keysurv].loop_dic.items():
                 PBAR2.progressbar.setValue(j)
                 j=j+1
                 if any(self.survey_dic[keysurv].loop_dic[keyloop].t):
@@ -926,7 +955,7 @@ class Campaign(ChannelList):
                 PBAR3 = ProgressBar(total=len(self.survey_dic[keysurv].loop_dic[keyloop].station_dic.keys()),textmess='stations')   
                 PBAR3.show()
                 k=1
-                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+                for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     PBAR3.progressbar.setValue(k)
                     k=k+1
                     #get tides and round to µgal level
@@ -969,16 +998,16 @@ class Campaign(ChannelList):
          #instanciate a Campaign object to store all observations prior to 
          #inversion
          LS_obs=Campaign()
-         for keysurv,surv in self.survey_dic.iteritems():
+         for keysurv,surv in self.survey_dic.items():
              if surv.keepitem==1:
                  #empty survey
                  survtmp=Survey(ChannelList(),surv.name)             
                  LS_obs.survey_dic[keysurv]=survtmp
-                 for keyloop,loop in self.survey_dic[keysurv].loop_dic.iteritems():
+                 for keyloop,loop in self.survey_dic[keysurv].loop_dic.items():
                      if loop.keepitem==1:
                          looptmp=Loop(ChannelList(),loop.name)
                          LS_obs.survey_dic[keysurv].loop_dic[keyloop]=looptmp
-                         for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():                     
+                         for keysta,sta in self.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():                     
                              if sta.keepitem==1:
                                  statmp=Station(ChannelList(),sta.stationName,sta.name)
                                  #update SD:
@@ -1021,7 +1050,7 @@ class Campaign(ChannelList):
                                  LS_obs.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta]=statmp
          
          #go to the survey level for drift estimates
-         for keysurv,surv in self.survey_dic.iteritems(): 
+         for keysurv,surv in self.survey_dic.items(): 
              if surv.keepitem==1:
                  self.survey_dic[keysurv].calculateSimpleDiff(LS_obs.survey_dic[keysurv],\
                  drift_t,drift_temp,alpha,sd_factor,sd_add,write_out_files,output_root_dir)
@@ -1171,7 +1200,7 @@ class Survey(ChannelList):
         """
         file=open(filename,'w')
         file.write("station   g      sd\n")
-        for station_id,sta in self.output_dic.iteritems():            
+        for station_id,sta in self.output_dic.items():            
             file.write("%d %2.3f %2.3f\n"%(sta[0], sta[1], sta[2]))
         file.close()     
         
@@ -1217,10 +1246,10 @@ class Survey(ChannelList):
         #number of absolute obs.
         n_obs_abs=1
         base_station_number=1
-        for keyloop,loop in LS_obs.loop_dic.iteritems():
-            n_rel_Obs=n_rel_Obs+len([1 for keysta,sta in LS_obs.loop_dic[keyloop].station_dic.iteritems()])-1
+        for keyloop,loop in LS_obs.loop_dic.items():
+            n_rel_Obs=n_rel_Obs+len([1 for keysta,sta in LS_obs.loop_dic[keyloop].station_dic.items()])-1
      
-        nloops=sum([1 for keyloop,loop in LS_obs.loop_dic.iteritems()])
+        nloops=sum([1 for keyloop,loop in LS_obs.loop_dic.items()])
         
         #number of unknowns:
         nb_X=len(sta_dic_LS)+drift_t*nloops+drift_temp*nloops
@@ -1235,13 +1264,13 @@ class Survey(ChannelList):
         
         tot_stat=0
         tot_loop=0
-        for keyloop,loop in LS_obs.loop_dic.iteritems():
+        for keyloop,loop in LS_obs.loop_dic.items():
             #check that same order is kept!!!!=> should be ok with OrderedDict
-            g=np.array([sta.grav for keysta,sta in loop.station_dic.iteritems()])
-            sd=np.array([sta.sd for keysta,sta in loop.station_dic.iteritems()])            
-            temp=np.array([sta.temp for keysta,sta in loop.station_dic.iteritems()])            
-            stanumber=np.array([keysta[0] for keysta,sta in loop.station_dic.iteritems()])   
-            t=np.array([sta.t for keysta,sta in loop.station_dic.iteritems()])
+            g=np.array([sta.grav for keysta,sta in loop.station_dic.items()])
+            sd=np.array([sta.sd for keysta,sta in loop.station_dic.items()])            
+            temp=np.array([sta.temp for keysta,sta in loop.station_dic.items()])            
+            stanumber=np.array([keysta[0] for keysta,sta in loop.station_dic.items()])   
+            t=np.array([sta.t for keysta,sta in loop.station_dic.items()])
             for i in range(len(g)-1):
                 Obs[tot_stat+i]=g[i+1]-g[i]
                 P[tot_stat+i,tot_stat+i]=1/(sd[i+1]**2+sd[i]**2)
@@ -1276,7 +1305,7 @@ class Survey(ChannelList):
         lsd.dof=n_rel_Obs+n_obs_abs-nb_X
         lsd.lsInversion()
         for i in range(len(sta_dic_LS)):
-            for key,val in sta_dic_LS.iteritems():
+            for key,val in sta_dic_LS.items():
                 if val==i:
                     keytmp=key
             self.output_dic[keytmp]=(keytmp,float(lsd.X[i]),sqrt(lsd.var[i]))
@@ -1285,7 +1314,7 @@ class Survey(ChannelList):
         #display results
         print("For survey: %s"%(self.name))
         print("Station , g (mgal), SD (mgal)")
-        for tupid,tup in self.output_dic.iteritems():
+        for tupid,tup in self.output_dic.items():
             print("%d, %7.4f, %7.4f"%(tup))         
             
         #calculate and display statistics:            
@@ -1303,7 +1332,7 @@ class Survey(ChannelList):
             "LSresults_%4d%02d%02d_%02d%02d.dat"%(tday.year,\
             tday.month,tday.day,tday.hour,tday.minute),'w')
             file.write("station   g      sd\n")
-            for station_id,sta in self.output_dic.iteritems():            
+            for station_id,sta in self.output_dic.items():            
                 file.write("%d %7.4f %7.4f\n"%(sta[0], sta[1], sta[2]))                      
             file.close()
 
@@ -1319,20 +1348,20 @@ class Survey(ChannelList):
             file.write(" ==============================================================================\n\n")
             file.write("Observations (weighted means):\n\n")
             file.write("station, gravity (mgal), SD(mgal), Temp, t\n\n")
-            for keyloop,loop in LS_obs.loop_dic.iteritems():
+            for keyloop,loop in LS_obs.loop_dic.items():
                 file.write("Loop: %s\n"%(keyloop))
-                for keysta,sta in LS_obs.loop_dic[keyloop].station_dic.iteritems():
+                for keysta,sta in LS_obs.loop_dic[keyloop].station_dic.items():
                     file.write("%04d    %9.4f %6.4f %5.2f %7.2f\n"%(int(keysta[0]),\
                     sta.grav,sta.sd,sta.temp,sta.t))
                 file.write("\n")
             file.write(" ==============================================================================\n")
             file.write("Relative observations:\n\n")
             file.write("station1, station2, gravity (mgal), SD(mgal)\n\n")
-            for keyloop,loop in LS_obs.loop_dic.iteritems():
+            for keyloop,loop in LS_obs.loop_dic.items():
                 file.write("Loop: %s\n"%(keyloop))
-                g=np.array([sta.grav for keysta,sta in loop.station_dic.iteritems()])
-                sd=np.array([sta.sd for keysta,sta in loop.station_dic.iteritems()])            
-                stanumber=np.array([keysta[0] for keysta,sta in loop.station_dic.iteritems()])                   
+                g=np.array([sta.grav for keysta,sta in loop.station_dic.items()])
+                sd=np.array([sta.sd for keysta,sta in loop.station_dic.items()])            
+                stanumber=np.array([keysta[0] for keysta,sta in loop.station_dic.items()])                   
                 for i in range(len(g)-1):
                     file.write("%04d  %04d    %9.4f %6.4f\n"%(stanumber[i],\
                     stanumber[i+1],g[i+1]-g[i],np.sqrt(sd[i+1]**2+sd[i]**2)))
@@ -1362,7 +1391,7 @@ class Survey(ChannelList):
             file.write("Final results\n\n")
 
             file.write("station   g      sd\n")
-            for station_id,sta in self.output_dic.iteritems():            
+            for station_id,sta in self.output_dic.items():            
                 file.write("%d    %7.4f %7.4f\n"%(sta[0], sta[1], sta[2]))      
             file.write("\n")    
             file.write("Drift values:\n")
@@ -1388,9 +1417,9 @@ class Survey(ChannelList):
         
         station_list=[]
         sta_dic_LS={}
-        for keyloop,loop in self.loop_dic.iteritems():
+        for keyloop,loop in self.loop_dic.items():
             #sta[1] est l'occurence...
-            station_list=np.append(station_list,[keysta[0] for keysta,sta in self.loop_dic[keyloop].station_dic.iteritems()])
+            station_list=np.append(station_list,[keysta[0] for keysta,sta in self.loop_dic[keyloop].station_dic.items()])
         station_list=np.sort(np.unique(station_list))
         for i in range(len(station_list)):
             sta_dic_LS[station_list[i]]=i
@@ -1451,7 +1480,8 @@ class Loop(ChannelList):
         """get station reoccupation
         mostly to be used iteratively within th populateStationDic function
         """
-        station_reoc=[sta[0] for sta,stakey in self.station_dic.iteritems() if sta[0]==station]
+        # station_reoc=[sta[0] for sta,stakey in self.station_dic.items() if sta[0]==station]
+        station_reoc=[sta[0] for sta,stakey in self.station_dic.items() if sta[0]==station]
         return(len(station_reoc))
         
     def populateStationDic(self):
@@ -1503,9 +1533,9 @@ class Loop(ChannelList):
         print("filename: %s"%filename)
         file=open(filename,'w')
         
-        for station_id,sta in sorted(self.station_dic.iteritems(), key=lambda x: x[1].t[1]):                  
+        for station_id,sta in sorted(self.station_dic.items(), key=lambda x: x[1].t[1]):                  
         
-        #for station_id,sta in self.station_dic.iteritems():
+        #for station_id,sta in self.station_dic.items():
             if sta.keepitem==1:
                 for i in range(len(sta.t)):
                     if sta.keepdata[i]==1:                
@@ -1541,9 +1571,9 @@ class Loop(ChannelList):
         print("filename: %s"%filename)
         file=open(filename,'w')
         
-        for station_id,sta in sorted(self.station_dic.iteritems(), key=lambda x: x[1].t[1]):                  
+        for station_id,sta in sorted(self.station_dic.items(), key=lambda x: x[1].t[1]):                  
         
-        #for station_id,sta in self.station_dic.iteritems():
+        #for station_id,sta in self.station_dic.items():
             if sta.keepitem==1:
                 for i in range(len(sta.t)):               
         	         file.write("%6d %4.3f %1.3f  %2d   %2d	%2.1f	%2.1f	%2.2f	%1.3f	%3d	%3.3f %02d%02d%02d %02d%02d%02d   0  0.000     %3.4f    %1d\n"%(sta.station[i],\
@@ -1563,8 +1593,8 @@ class Loop(ChannelList):
        
         """
         file=open(filename,'w')
-        for station_id,sta in sorted(self.station_dic.iteritems(), key=lambda x: x[1].t[1]):                          
-#        for station_id,sta in self.station_dic.iteritems():
+        for station_id,sta in sorted(self.station_dic.items(), key=lambda x: x[1].t[1]):                          
+#        for station_id,sta in self.station_dic.items():
             if sta.keepitem==1:            
                 for i in range(len(sta.t)):
                     if sta.keepdata[i]==1:  
@@ -1895,7 +1925,7 @@ class StaticDataSet(object):
         """        
         file=open(filename,'w')
         file.write("Station_number  X(m)    Y(m)    Z(m)    lat(°)  lon(°)  g(mgal)\n")
-        for station_id,sta in self.Station_dic.iteritems():                         
+        for station_id,sta in self.Station_dic.items():                         
             file.write("%d  %f  %f  %f  %f  %f  %f\n"%(sta.station,\
                             sta.x,sta.y,sta.alt,sta.lat,sta.lon,sta.grav))
     

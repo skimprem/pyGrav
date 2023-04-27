@@ -231,12 +231,12 @@ class mainProg(QtWidgets.QMainWindow):
             self.base_station=int(text)    
         campaigndata=Campaign()
         #populate a Campaign object
-        campaigndata.readModifCDataFilesAndPopulateSurveyDic(fname)
+        campaigndata.readModifCDataFilesAndPopulateSurveyDic(fname[0])
         self.campaigndata=campaigndata        
         
         #once stations and loops are populated, populate the upstream 
         #structures:
-        for keysurvey,survey in self.campaigndata.survey_dic.iteritems():            
+        for keysurvey,survey in self.campaigndata.survey_dic.items():            
             survey.populateFromSubDictionnaries(survey.loop_dic)
             self.campaigndata.survey_dic[keysurvey]=survey
         self.campaigndata.populateFromSubDictionnaries(self.campaigndata.survey_dic)
@@ -312,9 +312,10 @@ class mainProg(QtWidgets.QMainWindow):
 
         # ask for data file
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
+        print(fname)
         survname=datetime(1990,2,11)
         survey=Survey(ChannelList(),str(survname.date()))
-        survey.readSimpleDiff(fname)
+        survey.readSimpleDiff(fname[0])
         self.campaigndata.survey_dic[survname.toordinal()]=survey
         self.computeDoubleDifferencesAction.setEnabled(True)
         self.saveAction1.setEnabled(True)
@@ -331,7 +332,7 @@ class mainProg(QtWidgets.QMainWindow):
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)  
         survname=datetime(1990,2,11)
         staticdataset=StaticDataSet()
-        staticdataset.readSimpleDiff_static(fname)
+        staticdataset.readSimpleDiff_static(fname[0])
         self.static_dataset=staticdataset
 
 
@@ -345,7 +346,7 @@ class mainProg(QtWidgets.QMainWindow):
         # ask for hierarchical file
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.output_root_dir)            
         # open hierarchical file
-        f=open(fname,'r')  
+        f=open(fname[0],'r')  
         for line in f:
             # Clean line
             line = line.strip() 
@@ -412,7 +413,7 @@ class mainProg(QtWidgets.QMainWindow):
         print('hold on a sec')
         self.statusBar().showMessage("Hold on a sec")        
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file',self.data_path)          
-        self.surveydates=read_start_end_dates(fname)        
+        self.surveydates=read_start_end_dates(fname[0])        
         #call the next generic step of the survey selection process        
         self.baseStationSelection()     
 
@@ -625,12 +626,12 @@ class mainProg(QtWidgets.QMainWindow):
                 'home')
                 
         Tides=timeSeries()
-        if fname[len(fname)-4:len(fname)]==".tsf" or fname[len(fname)-4:len(fname)]==".TSF":
+        if fname[0][len(fname[0])-4:len(fname[0])]==".tsf" or fname[0][len(fname[0])-4:len(fname[0])]==".TSF":
             #tsoftfile
-            Tides.populateFromTsoftFile(fname,1)
+            Tides.populateFromTsoftFile(fname[0],1)
         else:
             #assume it's eterna: JPBoy loading calculations are usually on channel 3
-            Tides.populateFromEternaFile(fname,3)
+            Tides.populateFromEternaFile(fname[0],3)
 
         self.applyTideCorrection(Tides)
         
@@ -722,7 +723,7 @@ class mainProg(QtWidgets.QMainWindow):
             #Ask the user to provide tide files
             fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Load tidal parameters file', 
                 self.data_path)        
-            tides=open(fname,'r')
+            tides=open(fname[0],'r')
             for line in tides:
                 # Clean line
                 line = line.strip()      
@@ -832,7 +833,7 @@ class mainProg(QtWidgets.QMainWindow):
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open tidal parameters file (BLQ)',self.data_path) 
         
         #read amplitudes and phases:
-        fh = open(fname, 'r')
+        fh = open(fname[0], 'r')
         test=0
         i=0
         amp=[]
@@ -899,7 +900,7 @@ class mainProg(QtWidgets.QMainWindow):
         i=1
         PBAR1 = ProgressBar(total=len(self.campaigndata.survey_dic.keys()),textmess='surveys')   
         PBAR1.show()        
-        for keysurv,surv in self.campaigndata.survey_dic.iteritems():
+        for keysurv,surv in self.campaigndata.survey_dic.items():
             PBAR1.progressbar.setValue(i)
             i=i+1
             Atmtemp=deepcopy(Atm)
@@ -910,7 +911,7 @@ class mainProg(QtWidgets.QMainWindow):
             PBAR2 = ProgressBar(total=len(self.campaigndata.survey_dic[keysurv].loop_dic.keys()),textmess='loops')   
             PBAR2.show()
             j=1
-            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.iteritems():
+            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.items():
                 PBAR2.progressbar.setValue(j)
                 j=j+1
                 Atmtemp2=deepcopy(Atmtemp)
@@ -921,7 +922,7 @@ class mainProg(QtWidgets.QMainWindow):
                 PBAR3 = ProgressBar(total=len(self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.keys()),textmess='stations')   
                 PBAR3.show()
                 k=1
-                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     PBAR3.progressbar.setValue(k)
                     k=k+1
                     Atmtemp3=deepcopy(Atmtemp2)
@@ -985,13 +986,16 @@ class mainProg(QtWidgets.QMainWindow):
         
         # Left panel: tree with data hierarchy (surveys, loops, stations)     
         #initialization: set the display to the first station
-        keysurv=self.campaigndata.survey_dic.keys()
-        keyloop=self.campaigndata.survey_dic[keysurv[0]].loop_dic.keys()
-        keysta=self.campaigndata.survey_dic[keysurv[0]].loop_dic[keyloop[0]].station_dic.keys()
+        keysurv=list(self.campaigndata.survey_dic.keys())
+        print(keysurv)
+        keyloop=list(self.campaigndata.survey_dic[keysurv[0]].loop_dic.keys())
+        print(keyloop)
+        keysta=list(self.campaigndata.survey_dic[keysurv[0]].loop_dic[keyloop[0]].station_dic.keys())
+        print(keysta)
         #instanciate a MyTree model object:    
         self.tree = MyTree(self.campaigndata,parent=self)
-        self.tree.connect(self.tree, QtCore.SIGNAL('itemClicked(QTreeWidgetItem*, int)'), self.onClick)
-        self.tree.connect(self.tree, QtCore.SIGNAL('itemChanged(QTreeWidgetItem*, int)'), self.onChange)
+        self.tree.itemClicked.connect(self.onClick)
+        self.tree.itemChanged.connect(self.onChange)
 
         # center panel: table (station values)
         #instanciate a stationDataTableModel model object
@@ -1208,9 +1212,9 @@ class mainProg(QtWidgets.QMainWindow):
         if dur_thrshld.text():            
             dur_threshold=float(dur_thrshld.text());selec_dur='ok'         
             
-        for keysurv,surv in self.campaigndata.survey_dic.iteritems():
-            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.iteritems():
-                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+        for keysurv,surv in self.campaigndata.survey_dic.items():
+            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.items():
+                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     # convert to array: needed for operations
                     g=np.array(self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].grav)*1000
                     g=g-g[len(g)-1]
@@ -1402,9 +1406,9 @@ class mainProg(QtWidgets.QMainWindow):
         to main window
         """
         
-        for keysurv,surv in self.campaigndata.survey_dic.iteritems():
-            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.iteritems():
-                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+        for keysurv,surv in self.campaigndata.survey_dic.items():
+            for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.items():
+                for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                     if np.sum(sta.keepdata)==0:
                         #all measurements of a single station have been discarded
                         self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].keepitem=0
@@ -1529,18 +1533,18 @@ class mainProg(QtWidgets.QMainWindow):
         if not os.path.exists(self.output_root_dir):
             os.makedirs(self.output_root_dir)
             
-        for survid,surv in datafordriftadj.survey_dic.iteritems():
+        for survid,surv in datafordriftadj.survey_dic.items():
             if surv.keepitem==1:
                 survdir=self.output_root_dir+os.sep+surv.name
                 if not os.path.exists(survdir):
                     os.makedirs(survdir)
                 j=0
                 file_list=[]
-                for loopid,loop in surv.loop_dic.iteritems():
+                for loopid,loop in surv.loop_dic.items():
                     if loop.keepitem==1:
                         j=j+1
                         #get year and julian day:
-                        stakeys=[key for key,sta in loop.station_dic.iteritems() if sta.keepitem==1]
+                        stakeys=[key for key,sta in loop.station_dic.items() if sta.keepitem==1]
                         datefirststa=loop.station_dic[stakeys[1]].t[0].timetuple()
                         yr=str(datefirststa.tm_year)
                         jday="%03d"%datefirststa.tm_yday
@@ -1610,18 +1614,18 @@ class mainProg(QtWidgets.QMainWindow):
         datafordriftadj=MCwin.datafordriftadj        
 #        if not os.path.exists(output_root_dir):
 #            os.makedirs(output_root_dir)            
-        for survid,surv in datafordriftadj.survey_dic.iteritems():
+        for survid,surv in datafordriftadj.survey_dic.items():
             if surv.keepitem==1:
                 survdir=output_root_dir+os.sep+surv.name
                 if not os.path.exists(survdir):
                     os.makedirs(survdir)
                 j=0
                 file_list=[]
-                for loopid,loop in surv.loop_dic.iteritems():
+                for loopid,loop in surv.loop_dic.items():
                     if loop.keepitem==1:
                         j=j+1
                         #get year and julian day:
-                        stakeys=[key for key,sta in loop.station_dic.iteritems() if sta.keepitem==1]
+                        stakeys=[key for key,sta in loop.station_dic.items() if sta.keepitem==1]
                         datefirststa=loop.station_dic[stakeys[1]].t[0].timetuple()
                         yr=str(datefirststa.tm_year)
                         jday="%03d"%datefirststa.tm_yday
@@ -1701,7 +1705,7 @@ class mainProg(QtWidgets.QMainWindow):
         At station numbers keys of this dictionary, one finds the following tuple:
         (station, gravity, std)
         """
-        for survid,surv in datafordriftadj.survey_dic.iteritems():
+        for survid,surv in datafordriftadj.survey_dic.items():
             if surv.keepitem==1:
                 survdir=output_root_dir+os.sep+surv.name     
                 #identify every folders matching the given pattern
@@ -1717,7 +1721,7 @@ class mainProg(QtWidgets.QMainWindow):
                 self.campaigndata.survey_dic[survid].read_from_mcgravi_output_file(mcgravi_filename[0])
                 print("For survey: %s"%(num2date(survid)))
                 print("Station , g (mgal), SD (mgal)")                
-                for tupid,tup in self.campaigndata.survey_dic[survid].output_dic.iteritems():
+                for tupid,tup in self.campaigndata.survey_dic[survid].output_dic.items():
                     print("%d, %7.4f, %7.4f"%(tup))
                
                                                      
@@ -1732,7 +1736,7 @@ class mainProg(QtWidgets.QMainWindow):
         Mainfile=open(self.output_root_dir+os.sep+\
         'simple_diff_data_hierarchy_%4d%02d%02d_%02d%02d%02d.txt'%(tday.year,\
         tday.month,tday.day,tday.hour,tday.minute,tday.second),'w')        
-        for survid,surv in self.campaigndata.survey_dic.iteritems():
+        for survid,surv in self.campaigndata.survey_dic.items():
             print(f'{survid}')
             if surv.keepitem==1:
                 survdir=self.output_root_dir+os.sep+surv.name  
@@ -1753,7 +1757,7 @@ class mainProg(QtWidgets.QMainWindow):
         executed when saving data...
         """
         #axis=0 to sort on first axis
-        survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1],axis=0)
+        survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.items() if surv.keepitem==1],axis=0)
         surveySelectList=QtWidgets.QListWidget()
         self.statusBar().showMessage("Please choose reference survey (double-click)")
         
@@ -1772,7 +1776,7 @@ class mainProg(QtWidgets.QMainWindow):
         - compute classic double differences
         - compute double differences from network mean values        
         """             
-        survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1],axis=0)
+        survnames=np.sort([(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.items() if surv.keepitem==1],axis=0)
         for surv in survnames:
             if surv[1] == item.text():
                 #print(f'{self.campaigndata.survey_dic[surv[0]].name}')
@@ -1848,20 +1852,20 @@ class mainProg(QtWidgets.QMainWindow):
             'time offset to apply (hr)?')        
         if ok:
             self.t_offset=int(text)                           
-            for keysurv,surv in self.campaigndata.survey_dic.iteritems():
+            for keysurv,surv in self.campaigndata.survey_dic.items():
                 t=np.array(self.campaigndata.survey_dic[keysurv].t)+timedelta(self.t_offset/24,0,0)                              
                 self.campaigndata.survey_dic[keysurv].t=t                 
-                for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.iteritems():
+                for keyloop,loop in self.campaigndata.survey_dic[keysurv].loop_dic.items():
                     t=np.array(self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].t)+timedelta(self.t_offset/24,0,0)                              
                     self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].t=t                    
-                    for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.iteritems():
+                    for keysta,sta in self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic.items():
                         # convert to array: needed for operations
                         t=np.array(self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].t)+timedelta(self.t_offset/24,0,0)                              
                         self.campaigndata.survey_dic[keysurv].loop_dic[keyloop].station_dic[keysta].t=t    
             
         #once stations and loops are populated, populate the upstream 
         #structures:
-        #for keysurvey,survey in self.campaigndata.survey_dic.iteritems():            
+        #for keysurvey,survey in self.campaigndata.survey_dic.items():            
         #    survey.populateFromSubDictionnaries(survey.loop_dic)
         #    self.campaigndata.survey_dic[keysurvey]=survey
         #self.campaigndata.populateFromSubDictionnaries(self.campaigndata.survey_dic)        
@@ -1879,7 +1883,7 @@ class mainProg(QtWidgets.QMainWindow):
         #### now define display behaviour for all panels       
         
         # Left panel: 
-        survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1]
+        survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.items() if surv.keepitem==1]
         self.surveySelectList=QtWidgets.QListWidget()
         self.statusBar().showMessage("Please choose a survey (double-click)")        
         for surv in survnames:
@@ -1934,17 +1938,17 @@ class mainProg(QtWidgets.QMainWindow):
         """
         once the survey is selected, it can be plotted
         """             
-        survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.iteritems() if surv.keepitem==1]
+        survnames=[(survid,surv.name) for survid,surv in self.campaigndata.survey_dic.items() if surv.keepitem==1]
         for surv in survnames:
             if surv[1] == item.text():
                 print(f'{self.campaigndata.survey_dic[surv[0]].name}')
                 simpleDiffDic=self.campaigndata.survey_dic[surv[0]].output_dic
-                stanames=[station[0] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
-                gval=[station[1] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
-                STD=[station[2] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
+                stanames=[station[0] for keysta,station in sorted(simpleDiffDic.items(), key=lambda x: int(x[0]))] 
+                gval=[station[1] for keysta,station in sorted(simpleDiffDic.items(), key=lambda x: int(x[0]))] 
+                STD=[station[2] for keysta,station in sorted(simpleDiffDic.items(), key=lambda x: int(x[0]))] 
                 if surv.height_bouguer_corr=='ok':
-                    gcorr_height=[station[3] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
-                    gcorr_Bouguer=[station[4] for keysta,station in sorted(simpleDiffDic.iteritems(), key=lambda x: int(x[0]))] 
+                    gcorr_height=[station[3] for keysta,station in sorted(simpleDiffDic.items(), key=lambda x: int(x[0]))] 
+                    gcorr_Bouguer=[station[4] for keysta,station in sorted(simpleDiffDic.items(), key=lambda x: int(x[0]))] 
                     
                     self.setSimpleDiffPlot(self.axes_grav,stanames,gval,STD,gcorr_height,gcorr_Bouguer)
                 else:

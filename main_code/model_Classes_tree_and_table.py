@@ -83,22 +83,22 @@ class MyTree(QtWidgets.QTreeWidget):
 
         # create some data members, these will be set from the outside and trigger a model change
         self.campaigndata = campaigndata          
-        for keysurvey,survey in self.campaigndata.survey_dic.iteritems():            
+        for keysurvey,survey in self.campaigndata.survey_dic.items():            
             # Create a survey tree item
             survey_item = MyTreeItem(survey.name,keysurv=keysurvey,parent=self)
             # for all the loops attached to the survey create a loop tree item
-            for keyloop,loop in self.campaigndata.survey_dic[keysurvey].loop_dic.iteritems():  
+            for keyloop,loop in self.campaigndata.survey_dic[keysurvey].loop_dic.items():  
                 # get loop name: date of the first measure of the first station
                 #after base station (the latter being potentially acquired the 
                 # previous day)
-                station_keys=[keysta for keysta,station in sorted(self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.iteritems(), key=lambda x: x[1].t[1])]                  
+                station_keys=[keysta for keysta,station in sorted(self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.items(), key=lambda x: x[1].t[1])]                  
                 loopname=loop.station_dic[station_keys[1]].t[1].date()
                 loop_item = MyTreeItem("loop" + loop.name+' ('+ str(loopname)+')',keysurv=keysurvey,keyloop=keyloop,parent=survey_item)                
                 
                 # the following sorts dictionary items following the first value of the 't'-list attribute
-                for keysta,station in sorted(self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.iteritems(), key=lambda x: x[1].t[1]):                  
+                for keysta,station in sorted(self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.items(), key=lambda x: x[1].t[1]):                  
                 
-                #for keysta,station in self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.iteritems():                    
+                #for keysta,station in self.campaigndata.survey_dic[keysurvey].loop_dic[keyloop].station_dic.items():                    
                     # create the station item
 #                    name_to_disp="sta" +
                     
