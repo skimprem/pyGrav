@@ -378,11 +378,23 @@ class Campaign(ChannelList):
                         continue
                     #parse string line first with respect to '/' caracters (used in the date format), 
                     #then with ':' (used for the time display), eventually with the classic ' '
-                    vals_temp1=line.split('/')
-                    vals_temp2=vals_temp1[0].split(':')
-                    vals_temp3=vals_temp2[0].split()                
-                    vals_temp4=vals_temp2[2].split()
+                    vals_temp1=line.split()
+                    vals_temp2=vals_temp1[1].split('-')
+                    vals_temp3=vals_temp1[2].split(':')                
 
+                    # fill object properties:
+                    self.line.append(float(vals_temp1[4]))
+                    self.station.append(float(vals_temp1[0]))
+                    self.grav.append(float(vals_temp1[3]))
+                    self.sd.append(float(vals_temp1[5]))
+                    self.tiltx.append(float(vals_temp1[8]))
+                    self.tilty.append(float(vals_temp1[9]))
+                    self.temp.append(float(vals_temp1[10]))
+                    self.dur.append(int(vals_temp1[15]))
+                    self.t.append(datetime(int(vals_temp2[0]),int(vals_temp2[1]),\
+                    int(vals_temp2[2]),int(vals_temp3[0]),int(vals_temp3[1]),\
+                    int(vals_temp3[2])))
+                    self.keepdata.append(1)                                                                                         
 
         except IOError:
             #si ça ne marche pas, affiche ce message et continue le prog
