@@ -95,6 +95,18 @@ class ChannelList(object):
     corr_g=[]
     keepdata=[]
     keepitem=int
+    se=[]
+    raw=[]
+    tiltcorr=[]
+    tempcorr=[]
+    driftcorr=[]
+    instrheight=[]
+    userlat=[]
+    userlon=[]
+    gpslat=[]
+    gpslon=[]
+    gpselev=[]
+    corrections=[]
   
     def __init__(self):
         """
@@ -114,6 +126,18 @@ class ChannelList(object):
         self.corr_g=[]
         self.keepdata=[]
         self.keepitem=1
+        self.se=[]
+        self.raw=[]
+        self.tiltcorr=[]
+        self.tempcorr=[]
+        self.driftcorr=[]
+        self.instrheight=[]
+        self.userlat=[]
+        self.userlon=[]
+        self.gpslat=[]
+        self.gpslon=[]
+        self.gpselev=[]
+        self.corrections=[]
         
     def __str__(self):
         """Override the built-in method 'print' when applied to such object
@@ -332,12 +356,12 @@ class Campaign(ChannelList):
         try:
             #essaye d'ouvrir le fichier
             i=0
-            # PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load raw data')   
+            PBAR = ProgressBar(total=len([1 for line in  open(filename, 'r')]),textmess='Load raw data')   
             print("number of lines: %d"%len([1 for line in  open(filename, 'r')]))
-            # PBAR.show()
+            PBAR.show()
             if grav_type == 'cg5':
                 for line in fh:    
-                    # PBAR.progressbar.setValue(i)
+                    PBAR.progressbar.setValue(i)
                     i+=1
                     # Clean line
                     line = line.strip()
@@ -369,18 +393,16 @@ class Campaign(ChannelList):
                     self.keepdata.append(1)                                                                                         
             elif grav_type == 'cg6':
                 for line in fh:
-                    # PBAR.progressbar.setValue(i)
+                    PBAR.progressbar.setValue(i)
                     i+=1
                     # Clean line
                     line = line.strip()
                     # Skip blank and comment lines
                     if (not line) or (line[0] == '/') or (line[0] == 'L'):
                         continue
-                    #parse string line first with respect to '/' caracters (used in the date format), 
-                    #then with ':' (used for the time display), eventually with the classic ' '
                     vals_temp1=line.split()
                     vals_temp2=vals_temp1[1].split('-')
-                    vals_temp3=vals_temp1[2].split(':')                
+                    vals_temp3=vals_temp1[2].split(':')               
 
                     # fill object properties:
                     self.line.append(float(vals_temp1[4]))
@@ -388,11 +410,23 @@ class Campaign(ChannelList):
                     self.alt.append(float(vals_temp1[19]))
                     self.grav.append(float(vals_temp1[3]))
                     self.sd.append(float(vals_temp1[5]))
+                    self.se.append(float(vals_temp1[6]))
+                    self.raw.append(float(vals_temp1[7]))
                     self.tiltx.append(float(vals_temp1[8]))
                     self.tilty.append(float(vals_temp1[9]))
                     self.temp.append(float(vals_temp1[10]))
                     self.etc.append(float(vals_temp1[11]))
+                    self.tiltcorr.append(float(vals_temp1[12]))
+                    self.tempcorr.append(float(vals_temp1[13]))
+                    self.driftcorr.append(float(vals_temp1[14]))
                     self.dur.append(int(vals_temp1[15]))
+                    self.instrheight.append(float(vals_temp1[16]))
+                    self.userlat.append(float(vals_temp1[17]))
+                    self.userlon.append(float(vals_temp1[18]))
+                    self.gpslat.append(float(vals_temp1[20]))
+                    self.gpslon.append(float(vals_temp1[21]))
+                    self.gpselev.append(float(vals_temp1[22]))
+                    self.corrections.append(str(vals_temp1[23]))
                     self.rej.append(0)
                     self.t.append(datetime(int(vals_temp2[0]),int(vals_temp2[1]),\
                     int(vals_temp2[2]),int(vals_temp3[0]),int(vals_temp3[1]),\
