@@ -35,7 +35,7 @@ should be the tide- and pressure- correcter one (gcorr?)
 
 """
 import sys,os,shutil,subprocess,glob
-from PyQt5 import QtGui,QtCore
+from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import * 
@@ -44,7 +44,7 @@ from synthetic_tides import *
 from copy import deepcopy
 from datetime import *
 import numpy as np
-from matplotlib.dates import date2num,num2date
+from matplotlib.dates import num2date
 import matplotlib.dates as md
 
 #from model_Classes import *
@@ -1668,7 +1668,7 @@ class mainProg(QtWidgets.QMainWindow):
                 #shutil.copyfile("%s/tunnel.abs"%(self.data_path),"%s/tunnel.abs"%(survdir))
                 shutil.copyfile("./MCGravi_files/calib.cal","%s/calib.cal"%(survdir))
                 shutil.copyfile("./MCGravi_files/tunnel.abs","%s/tunnel.abs"%(survdir))                
-                shutil.copyfile("C:/mcgravi/mcgravi.exe","%s/mcgravi.exe"%(survdir))
+                # shutil.copyfile("C:/mcgravi/mcgravi.exe","%s/mcgravi.exe"%(survdir))
                 
                 self.campaigndata.writeStationLocationFile("%s/stations_coordinates.txt"%(survdir))              
                 

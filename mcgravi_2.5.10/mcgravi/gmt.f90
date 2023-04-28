@@ -1,5 +1,5 @@
 module GMT
-! Creation des fichiers pour la création des dessins sous GMT
+! Creation des fichiers pour la crï¿½ation des dessins sous GMT
 
 contains
 
@@ -7,7 +7,7 @@ contains
 ! 80 : script
 ! 81 : points relatifs
 ! 82 : points absolus
-! 83 : barres d'erreur sur les gravités
+! 83 : barres d'erreur sur les gravitï¿½s
 ! 84 : profils
 ! 85 : residus relatifs et absolus
 
@@ -111,32 +111,32 @@ subroutine WGMT_bat_profils(nomfic)
     !write(0,*)"Ecriture du script GMT"
     open(80,file = nomfic)
      
-    call Wfic(80,"`gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
-    call Wfic(80,"`gmtset PAGE_ORIENTATION  landscape`;")
-    call Wfic(80,"`gmtset PAPER_MEDIA a3`;")
-    call Wfic(80,"`gmtset ANNOT_FONT_SIZE_PRIMARY 10`;")
-    call Wfic(80,"`gmtset LABEL_FONT_SIZE 8`;")
-    call Wfic(80,"`gmtset CHAR_ENCODING  Standard+`;")
-    call Wfic(80,"`gmtset FRAME_WIDTH 0.1c`;")
-    call Wfic(80,"`gmtset MEASURE_UNIT cm`;")
+    call Wfic(80,"`gmt gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
+    call Wfic(80,"`gmt gmtset PAGE_ORIENTATION  landscape`;")
+    call Wfic(80,"`gmt gmtset PAPER_MEDIA a3`;")
+    call Wfic(80,"`gmt gmtset ANNOT_FONT_SIZE_PRIMARY 10`;")
+    call Wfic(80,"`gmt gmtset LABEL_FONT_SIZE 8`;")
+    call Wfic(80,"`gmt gmtset CHAR_ENCODING  Standard+`;")
+    call Wfic(80,"`gmt gmtset FRAME_WIDTH 0.1c`;")
+    call Wfic(80,"`gmt gmtset MEASURE_UNIT cm`;")
 
     write(s,17)' -R',param%lon1,'/',param%lat1,'/',param%lon2,'/',param%lat2,"r"
     17 format(A3,SP,D9.3,A1,SP,D9.3,A1,SP,D9.3,A1,SP,D9.3,A1)
     
-    s= "`pscoast "//s(1:45)//" -JM33c &
+    s= "`gmt pscoast "//s(1:45)//" -JM33c &
     &-B1.00g1.00f1.00:.""Observations relatives et absolues"":&
     & -Df -K -A0/1 -N1 -S210 &
-    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/0/0/255 &
-    & -I2/0.5p/0/0/255 -I3/0.5p/0/0/255 -Y2c -X3.5c > Profils.ps`;"
+    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -I1/0.5p/blue &
+    & -I2/0.5p/blue -I3/0.5p/blue -Y2c -X3.5c > Profils.ps`;"
    
     call Wfic(80,s)
-    call Wfic(80,"`psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Profils.ps`;")
+    call Wfic(80,"`gmt psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Profils.ps`;")
     
-    call Wfic(80,"`psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Profils.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Profils.ps`;")
+    call Wfic(80,"`gmt psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Profils.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Profils.ps`;")
         
-    call Wfic(80,"`psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Profils.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O  -G0 -Dj0.05 pts_abs.txt >> Profils.ps`;")
+    call Wfic(80,"`gmt psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Profils.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O  -G0 -Dj0.05 pts_abs.txt >> Profils.ps`;")
     
     close(80)
     
@@ -157,26 +157,26 @@ subroutine WGMT_bat_histo(nomfic,nomfic_histo,nomfic_ps,nomfic_png)
     !write(0,*)"Ecriture du script GMT"
     open(80,file = nomfic)
     
-    call Wfic(80,"`gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
-    call Wfic(80,"`gmtset PAGE_ORIENTATION  portrait`;")
-    call Wfic(80,"`gmtset PAPER_MEDIA a4`;")
-    call Wfic(80,"`gmtset ANNOT_FONT_SIZE_PRIMARY 12`;")
-	call Wfic(80,"`gmtset HEADER_FONT_SIZE 10p`;")
-    call Wfic(80,"`gmtset LABEL_FONT_SIZE 8`;")
-    call Wfic(80,"`gmtset CHAR_ENCODING  Standard+`;")
-    call Wfic(80,"`gmtset FRAME_WIDTH 0.1c`;")
-    call Wfic(80,"`gmtset MEASURE_UNIT cm`;")
+    call Wfic(80,"`gmt gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
+    call Wfic(80,"`gmt gmtset PAGE_ORIENTATION  portrait`;")
+    call Wfic(80,"`gmt gmtset PAPER_MEDIA a4`;")
+    call Wfic(80,"`gmt gmtset ANNOT_FONT_SIZE_PRIMARY 12`;")
+	call Wfic(80,"`gmt gmtset HEADER_FONT_SIZE 10p`;")
+    call Wfic(80,"`gmt gmtset LABEL_FONT_SIZE 8`;")
+    call Wfic(80,"`gmt gmtset CHAR_ENCODING  Standard+`;")
+    call Wfic(80,"`gmt gmtset FRAME_WIDTH 0.1c`;")
+    call Wfic(80,"`gmt gmtset MEASURE_UNIT cm`;")
     
     if (param%Type_resid) then         
-        call Wfic(80,'`psbasemap -R-4.5/+4.5/0/60 -JX16c/20c -Bf0.5a0.5:""&
+        call Wfic(80,'`gmt psbasemap -R-4.5/+4.5/0/60 -JX16c/20c -Bf0.5a0.5:""&
         &:/f10a10:"\045":WS:."Histogramme des r\345sidus standards": -K > '//nomfic_ps//'`;')
     else
-        call Wfic(80,'`psbasemap -R-4.5/+4.5/0/60 -JX16c/20c -Bf0.5a0.5:""&
+        call Wfic(80,'`gmt psbasemap -R-4.5/+4.5/0/60 -JX16c/20c -Bf0.5a0.5:""&
         &:/f10a10:"\045":WS:."Histogramme des r\345sidus normalis\345s": -K > '//nomfic_ps//'`;')
     end if
-    s = "`psxy   -R  -JX -G0/0/255 -W0.5p  -Sb0.9c -N -O -K " // nomfic_histo //' >> '//nomfic_ps//'`;'
+    s = "`gmt psxy   -R  -JX -Gblue -W0.5p  -Sb0.9c -N -O -K " // nomfic_histo //' >> '//nomfic_ps//'`;'
     call Wfic(80,s) 
-    call Wfic(80,'`psxy   -R  -JX -W0.8p/255/0/0  gauss.txt -N -O >> '//nomfic_ps//'`;')
+    call Wfic(80,'`gmt psxy   -R  -JX -W0.8p/255/0/0  gauss.txt -N -O >> '//nomfic_ps//'`;')
    
     close(80)
     
@@ -206,88 +206,88 @@ subroutine WGMT_bat(nomfic)
     write(0,*)"Ecriture du script GMT"
     open(80,file = nomfic)
 
-    call Wfic(80,"`gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
-    call Wfic(80,"`gmtset PAGE_ORIENTATION  landscape`;")
-    call Wfic(80,"`gmtset PAPER_MEDIA a3`;")
-    call Wfic(80,"`gmtset ANNOT_FONT_SIZE_PRIMARY 10`;")
-    call Wfic(80,"`gmtset LABEL_FONT_SIZE 8`;")
-    call Wfic(80,"`gmtset CHAR_ENCODING  Standard+`;")
-    call Wfic(80,"`gmtset FRAME_WIDTH 0.1c`;")
-    call Wfic(80,"`gmtset MEASURE_UNIT cm`;")
+    call Wfic(80,"`gmt gmtset PLOT_DEGREE_FORMAT +ddd:mm`;")
+    call Wfic(80,"`gmt gmtset PAGE_ORIENTATION  landscape`;")
+    call Wfic(80,"`gmt gmtset PAPER_MEDIA a3`;")
+    call Wfic(80,"`gmt gmtset ANNOT_FONT_SIZE_PRIMARY 10`;")
+    call Wfic(80,"`gmt gmtset LABEL_FONT_SIZE 8`;")
+    call Wfic(80,"`gmt gmtset CHAR_ENCODING  Standard+`;")
+    call Wfic(80,"`gmt gmtset FRAME_WIDTH 0.1c`;")
+    call Wfic(80,"`gmt gmtset MEASURE_UNIT cm`;")
  
     ! carte des ecarts-types sur les pesanteurs 
       
     write(s,17)' -R',param%lon1,'/',param%lat1,'/',param%lon2,'/',param%lat2,"r"   
-    s= "`pscoast "//s(1:45)//" -JM30c -B1.00g1.00f1.00:.""Ecarts-types sur les pesanteurs esitm\345es"": &
+    s= "`gmt pscoast "//s(1:45)//" -JM30c -B1.00g1.00f1.00:.""Ecarts-types sur les pesanteurs esitm\345es"": &
     & -Df -K -A0/1 -N1 -S210 &
-    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/0/0/255 &
-    & -I2/0.5p/0/0/255 -I3/0.5p/0/0/255 -Y2 -X4.5 > Error_bars.ps`;"        
+    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -I1/0.5p/blue &
+    & -I2/0.5p/blue -I3/0.5p/blue -Y2 -X4.5 > Error_bars.ps`;"        
     call Wfic(80,s)
-    call Wfic(80,"`psxy error_bars.txt -R -JM  -W1/255/0/0  -G255/0/0 &
+    call Wfic(80,"`gmt psxy error_bars.txt -R -JM  -W1/255/0/0  -G255/0/0 &
     & -Sc0.001c -Ey0.3c/255/0/0 -O -K >> Error_bars.ps`;")  
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O  -K  -G0 -Dj0.05   legende_sigma.txt >> Error_bars.ps`;")    
-    call Wfic(80,"`psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Error_bars.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150  -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Error_bars.ps`;")      
-    call Wfic(80,"`psxy -R   -JM  -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Error_bars.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O  -G0 -Dj0.05 pts_abs.txt >> Error_bars.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O  -K  -G0 -Dj0.05   legende_sigma.txt >> Error_bars.ps`;")    
+    call Wfic(80,"`gmt psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Error_bars.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150  -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Error_bars.ps`;")      
+    call Wfic(80,"`gmt psxy -R   -JM  -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Error_bars.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O  -G0 -Dj0.05 pts_abs.txt >> Error_bars.ps`;")
   
     ! carte des residus normalises
 
     write(s,17)' -R',param%lon1,'/',param%lat1,'/',param%lon2,'/',param%lat2,"r"
-    s= "`pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus normalis\345s"": -Df -K -A0/1 -N1 -S210 &
-    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/0/0/255 &
-    & -I2/0.5p/0/0/255 -I3/0.5p/0/0/255 -Y2 -X4.5 > Residus_norm.ps`;"      
+    s= "`gmt pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus normalis\345s"": -Df -K -A0/1 -N1 -S210 &
+    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/blue &
+    & -I2/0.5p/blue -I3/0.5p/blue -Y2 -X4.5 > Residus_norm.ps`;"      
     call Wfic(80,s)   
-    call Wfic(80,"`psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_norm.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c &
+    call Wfic(80,"`gmt psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_norm.ps`;")
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c &
     & -O -K residus_std_rel.txt >> Residus_norm.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c &
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c &
     & -O -K residus_std_abs.txt >> Residus_norm.ps`;")   
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05   legende_resid_std.txt >> Residus_norm.ps`;")  
-    call Wfic(80,"`psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_norm.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_norm.ps`;")     
-    call Wfic(80,"`psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_norm.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_norm.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05   legende_resid_std.txt >> Residus_norm.ps`;")  
+    call Wfic(80,"`gmt psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_norm.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_norm.ps`;")     
+    call Wfic(80,"`gmt psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_norm.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_norm.ps`;")
 
 
     ! carte des residus normalises ne passant pas le tau-test
 
     write(s,17)' -R',param%lon1,'/',param%lat1,'/',param%lon2,'/',param%lat2,"r"
-    s= "`pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus normalis\345s \345chouant au tau-test"": &
+    s= "`gmt pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus normalis\345s \345chouant au tau-test"": &
     &-Df -K -A0/1 -N1 -S210 &
-    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/0/0/255 &
-    & -I2/0.5p/0/0/255 -I3/0.5p/0/0/255 -Y2 -X4.5 > Residus_tautest.ps`;"      
+    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/blue &
+    & -I2/0.5p/blue -I3/0.5p/blue -Y2 -X4.5 > Residus_tautest.ps`;"      
     call Wfic(80,s)   
-    call Wfic(80,"`psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_tautest.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c  -O -K &
+    call Wfic(80,"`gmt psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_tautest.ps`;")
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c  -O -K &
     & residus_tau_rel.txt >> Residus_tautest.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c  -O -K &
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c  -O -K &
     & residus_tau_abs.txt >> Residus_tautest.ps`;")   
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05  &
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05  &
     & legende_resid_std.txt >> Residus_tautest.ps`;")  
-    call Wfic(80,"`psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_tautest.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_tautest.ps`;")     
-    call Wfic(80,"`psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_tautest.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_tautest.ps`;")
+    call Wfic(80,"`gmt psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_tautest.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_tautest.ps`;")     
+    call Wfic(80,"`gmt psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_tautest.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_tautest.ps`;")
 
     ! carte des residus bruts
 
     write(s,17)' -R',param%lon1,'/',param%lat1,'/',param%lon2,'/',param%lat2,"r"  
-    s= "`pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus"": -Df -K -A0/1 -N1 -S210 &
-    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/0/0/255 &
-    & -I2/0.5p/0/0/255 -I3/0.5p/0/0/255 -Y2 -X4.5 > Residus_bruts.ps`;"   
+    s= "`gmt pscoast "//s(1:45)//" -JM33c -B1.00g1.00f1.00:.""R\345sidus"": -Df -K -A0/1 -N1 -S210 &
+    & -W1 -Lf6.5/42.5/45/50k -G255/220/150 -S150/255/255 -I1/0.5p/blue &
+    & -I2/0.5p/blue -I3/0.5p/blue -Y2 -X4.5 > Residus_bruts.ps`;"   
     call Wfic(80,s)   
-    call Wfic(80,"`psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_bruts.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c &
+    call Wfic(80,"`gmt psxy -R  -JM -M -W1.5/120/120/120 -K -O profils.txt >> Residus_bruts.ps`;")
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/0/255/0 -G0/255/0 -Sv0.02c/0.04c/0.04c &
     & -O -K residus_brut_rel.txt >> Residus_bruts.ps`;")
-    call Wfic(80,"`psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c &
+    call Wfic(80,"`gmt psxy  -R -JM  -W1/255/0/255  -G255/0/255 -Sv0.02c/0.04c/0.04c &
     & -O -K residus_brut_abs.txt >> Residus_bruts.ps`;")  
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05 &
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G0 -Dj0.05 &
     &  legende_resid_brut.txt >> Residus_bruts.ps`;") 
-    call Wfic(80,"`psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_bruts.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_bruts.ps`;")     
-    call Wfic(80,"`psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_bruts.ps`;")
-    call Wfic(80,"`pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_bruts.ps`;")
+    call Wfic(80,"`gmt psxy -R  -JM -Sc0.075 -G0/0/0 -K -O pts_rel.txt >> Residus_bruts.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150 -O -K -G94/151/106 -Dj0.05  pts_rel.txt >> Residus_bruts.ps`;")     
+    call Wfic(80,"`gmt psxy -R   -JM -St0.25 -G255/0/0 -K -O  pts_abs.txt >> Residus_bruts.ps`;")
+    call Wfic(80,"`gmt pstext -R -JM -S5/255/220/150  -O  -G0 -Dj0.05 pts_abs.txt >> Residus_bruts.ps`;")
 
     close(80)
 
@@ -414,7 +414,7 @@ subroutine WGMT_sigma(nomfic,MC)
     close(83)
 end subroutine WGMT_sigma
 
-! Dessin des profils pour detecter les zones de faiblesse du réseau
+! Dessin des profils pour detecter les zones de faiblesse du rï¿½seau
 subroutine WGMT_profil(nomfic,MC)
     use Raw_data
     use param_data
@@ -582,7 +582,7 @@ subroutine WGMT_resid_abs(nomfic,MC,BRUTouNORM,ONLYTAU)
     close(85)
 end subroutine WGMT_resid_abs
 
-! Dessin des drifts linéaires
+! Dessin des drifts linï¿½aires
 ! Pour l'instant on remplit le tableau
 ! pour le dessin on verra plus tard 
 subroutine WGMT_drift(nomfic,MC)
@@ -710,7 +710,7 @@ subroutine WGMT_fic_histo(nomfic,MC)
     end do
     close(85)
     
-    ! ecriture de la loi théorique
+    ! ecriture de la loi thï¿½orique
     open(86,file = 'gauss.txt')
     do i = -45,45
       Norm = DBLE(i) / 10d0;
@@ -722,8 +722,8 @@ subroutine WGMT_fic_histo(nomfic,MC)
 end subroutine WGMT_fic_histo
 
 ! Ecrit dans un fichier 
-! Permet d'eviter les problèmes de longueur de ligne
-! num est le numéro du fichier ou on veut ecrire
+! Permet d'eviter les problï¿½mes de longueur de ligne
+! num est le numï¿½ro du fichier ou on veut ecrire
 subroutine Wfic(num,line)
     implicit none
     integer l,num
