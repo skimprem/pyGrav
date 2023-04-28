@@ -385,12 +385,15 @@ class Campaign(ChannelList):
                     # fill object properties:
                     self.line.append(float(vals_temp1[4]))
                     self.station.append(float(vals_temp1[0]))
+                    self.alt.append(float(vals_temp1[19]))
                     self.grav.append(float(vals_temp1[3]))
                     self.sd.append(float(vals_temp1[5]))
                     self.tiltx.append(float(vals_temp1[8]))
                     self.tilty.append(float(vals_temp1[9]))
                     self.temp.append(float(vals_temp1[10]))
+                    self.etc.append(float(vals_temp1[11]))
                     self.dur.append(int(vals_temp1[15]))
+                    self.rej.append(0)
                     self.t.append(datetime(int(vals_temp2[0]),int(vals_temp2[1]),\
                     int(vals_temp2[2]),int(vals_temp3[0]),int(vals_temp3[1]),\
                     int(vals_temp3[2])))
