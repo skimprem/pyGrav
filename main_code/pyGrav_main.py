@@ -987,11 +987,8 @@ class mainProg(QtWidgets.QMainWindow):
         # Left panel: tree with data hierarchy (surveys, loops, stations)     
         #initialization: set the display to the first station
         keysurv=list(self.campaigndata.survey_dic.keys())
-        print(keysurv)
         keyloop=list(self.campaigndata.survey_dic[keysurv[0]].loop_dic.keys())
-        print(keyloop)
         keysta=list(self.campaigndata.survey_dic[keysurv[0]].loop_dic[keyloop[0]].station_dic.keys())
-        print(keysta)
         #instanciate a MyTree model object:    
         self.tree = MyTree(self.campaigndata,parent=self)
         self.tree.itemClicked.connect(self.onClick)

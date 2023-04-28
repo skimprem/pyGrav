@@ -390,6 +390,19 @@ class Campaign(ChannelList):
                     self.t.append(datetime(int(vals_temp4[3]),int(vals_temp1[1]),\
                     int(vals_temp1[2]),int(vals_temp3[11]),int(vals_temp2[1]),\
                     int(vals_temp4[0])))             
+
+                    self.raw.append(9999.9)
+                    self.tiltcorr.append(9999.9)
+                    self.tempcorr.append(9999.9)
+                    self.driftcorr.append(9999.9)
+                    self.instrheight.append(9999.9)
+                    self.userlat.append(9999.9)
+                    self.userlon.append(9999.9)
+                    self.gpslat.append(9999.9)
+                    self.gpslon.append(9999.9)
+                    self.gpselev.append(9999.9)
+                    self.corrections.append("")
+ 
                     self.keepdata.append(1)                                                                                         
             elif grav_type == 'cg6':
                 for line in fh:
@@ -423,9 +436,22 @@ class Campaign(ChannelList):
                     self.instrheight.append(float(vals_temp1[16]))
                     self.userlat.append(float(vals_temp1[17]))
                     self.userlon.append(float(vals_temp1[18]))
-                    self.gpslat.append(float(vals_temp1[20]))
-                    self.gpslon.append(float(vals_temp1[21]))
-                    self.gpselev.append(float(vals_temp1[22]))
+
+                    try:
+                        self.gpslat.append(float(vals_temp1[20]))
+                    except:
+                        self.gpslat.append(9999.9)
+
+                    try:
+                        self.gpslon.append(float(vals_temp1[21]))
+                    except:
+                        self.gpslon.append(9999.9)
+                        
+                    try:
+                        self.gpselev.append(float(vals_temp1[22]))
+                    except:
+                        self.gpselev.append(9999.9)
+
                     self.corrections.append(str(vals_temp1[23]))
                     self.rej.append(0)
                     self.t.append(datetime(int(vals_temp2[0]),int(vals_temp2[1]),\
