@@ -3,34 +3,34 @@
 % Команда для сборки:
 %   latexmk -pdf -bibtex -latexoption="-file-line-error -synctex=1 -interaction=nonstopmode -shell-escape" $fullname
 
-\documentclass[10pt,twoside]{geodmanual}
-% \documentclass[10pt,twoside]{extreport}
+% \documentclass[10pt,twoside]{geodmanual}
+\documentclass[10pt,twoside]{extreport}
 
-% \usepackage[utf8]{inputenc}
-% \usepackage[russian]{babel}
-% \usepackage[OT1]{fontenc}
-% \usepackage{amsmath}
-% \usepackage{amsfonts}
-% \usepackage{amssymb}
-% \usepackage{makeidx}
-% \usepackage{graphicx}
-% \usepackage{hyperref}
-% \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
 \title{pyGrav}
 \author{roman}
 
 % \manualVersion{\ShowRepoVersion{}}
 
-\orgFullName{}
-\orgShortName{}
-\divName{}
-\depName{}
+% \orgFullName{}
+% \orgShortName{}
+% \divName{}
+% \depName{}
 
-\manualType{Руководство пользователя}
-\manualYear{2023}
-\manualCity{Астана}
-\def \pathtotitlepic {figures/a10.png}
+% \manualType{Руководство пользователя}
+% \manualYear{2023}
+% \manualCity{Астана}
+% \def \pathtotitlepic {figures/a10.png}
 
 \includeonly{
   chapters/overview,
@@ -41,7 +41,6 @@
   chapters/acquisition_protocol,
   chapters/least_square_inversion_and_error_propagation,
   chapters/installing_external_programs,
-  chapters/reference,
 }
 
 \newcommand{\pg}{\textbf{\textsf{pyGrav}}}
@@ -52,18 +51,15 @@
 \tableofcontents
 
 \include{chapters/overview}
-% \include{chapters/quick_start}
-% \include{chapters/pygrav_functions}
-% \include{chapters/test_case}
-% \include{chapters/code_structure}
-% \include{chapters/acquisition_protocol}
-% \include{chapters/least_square_inversion_and_error_propagation}
-% \include{chapters/installing_external_programs}
-% \include{chapters/reference}
+\include{chapters/quick_start}
+\include{chapters/pygrav_functions}
+\include{chapters/test_case}
+\include{chapters/code_structure}
+\include{chapters/acquisition_protocol}
+\include{chapters/least_square_inversion_and_error_propagation}
+\include{chapters/installing_external_programs}
 
 % \appendix
-
-% \include{appendix/quick_set-up_take-down}
 
 \bibliographystyle{apalike}
 \bibliography{biblio}
