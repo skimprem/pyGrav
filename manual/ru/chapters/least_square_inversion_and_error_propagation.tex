@@ -1,0 +1,105 @@
+\chapter[Среднеквадратическая инверсия и распределение ошибок]{Среднеквадратическая инверсия и распределение ошибок}
+\label{chap:least-square_inversion_and_error_propagation}
+
+Гравитационные наблюдения на станции представляют собой временные ряды из
+нескольких гравитационных измерений, каждое измерение является средним значением
+нескольких выборок. Например, типичные результаты измерения CG-5 получены в
+результате сбора образцов в течение более минуты (наилучшим считается 85 секунд
+\cite{merlet_micro-gravity_2008}) при частоте 6 Гц. Таким образом, стандартная погрешность
+(SE) при каждом измерении составляет:
+\begin{equation}
+    SE = \frac{\sigma}{\sqrt{n}}
+\end{equation}
+где $\sigma$~-- стандартное отклонение измерения, а $n$~-- количество выборок.
+
+После отбора данных из оставшихся временных рядов выводятся одно наблюдение $l_i$
+и стандартное отклонение $\sigma_i$ для каждой станции $i$ с использованием средних,
+взвешенных по дисперсии:
+\begin{equation}
+    l_i = \frac{\sum_{j=1}^{n}\frac{1}{SE^2_j}}{\sum_{j=1}{n}\frac{1}{SE^2_j}}
+\end{equation}
+\begin{equation}
+    \sigma_i = \frac{1}{\sum_{j=1}^{n}\frac{1}{SE_j^2}}
+\end{equation}
+
+Стандартное отклонение $\sigma_{ij}$ для наблюдения относительной силы тяжести
+$\Delta l_{ij}$ между станциями $i$ и $j$ определяется как
+\begin{equation}
+    \sigma_{ij} = \sqrt{\sigma_i^2 + \sigma_j^2},
+\end{equation}
+где $\Delta l_{ij}$ определяется как
+\begin{equation}
+    \Delta l_{ij} + \upsilon_{ij} = g_j + g_i + \sum_{T=1}^{m} a_T\left(t_j - t_i\right)^T + \sum_{k=1}^{m} b_k \left(t_j - t_i\right)^k
+\end{equation}
+
+Здесь $\upsilon_{ij}$~-- невязки, $g_i$~-- значение силы тяжести на станции $i$,
+$m$~-- степень полинома коэффициентов $a_T$ для дрейфа гравиметра и $n$~--
+степень полинома коэффициентов $b_k$ для температурного дрейфа. Таким образом,
+система уравнений является
+\begin{equation}
+    \mathbf{L}^{\mathbf{b}} + \mathbf{V} = \mathbf{A}\mathbf{X},
+\end{equation}
+где $\mathbf{L}^{\mathbf{b}}$ вектор, содержащий $n$ наблюдений относительной
+силы тяжести, $\mathbf{V}$~-- вектор с $n$ остатками, $\mathbf{A}$~-- расчетная
+матрица и $\mathbf{X}$~-- вектор $u$ неизвестных (значений силы тяжести и
+параметров дрейфа). Чтобы получить решение $\mathbf{X}$, необходимо удерживать
+фиксированным по крайней мере одно значение силы тяжести во время настройки (так
+называемое исходное значение силы тяжести).  Здесь это делается путем добавления
+наблюдений за абсолютной гравитацией (обычно равной нулю) на базовой станции:
+\begin{equation}
+    \mathbf{L}^{\mathbf{b}}_{\mathbf{g}} + \mathbf{V}_{\mathbf{g}} =
+    \mathbf{A}_{\mathbf{g}\mathbf{X}} =
+    \left[\mathbf{I}0\right]
+    \left[
+        \begin{aligned}
+            \mathbf{X}_{\mathbf{g}}\\
+            \mathbf{X}_{\mathbf{I}}
+        \end{aligned}
+    \right]
+\end{equation}
+
+Введя вектор $S$ с $k$ (числом значений силы тяжести), первые значения которых равны
+единице, а последние значения $u-k$ равны нулю, что удовлетворяет:
+\begin{equation}
+    \mathbf{S}^{\mathbf{T}}\mathbf{X}=0
+\end{equation}
+можно найти решение по методу наименьших квадратов для $X$:
+\begin{equation}
+    \mathbf{X} = \left(\mathbf{A}^{\mathbf{T}}\mathbf{P}\mathbf{A} + \mathbf{S}\mathbf{S}^{\mathbf{T}}\right)^{-1}\mathbf{A}^{\mathbf{T}}\mathbf{P}\mathbf{L}^{\mathbf{b}}
+\end{equation}
+
+Матрица весов $\mathbf{P}$ состоит из членов, обратных дисперсии для наблюдений.
+
+Апостериорная дисперсия единичного веса ($\sigma^2_0$) задается формулой
+\begin{equation}
+    \sigma^2_0 = \frac{\mathbf{V}^{\mathbf{T}}\mathbf{P}\mathbf{V}}{n+1-u}
+\end{equation}
+и апостериорная ковариационная матрица $\mathbf{S}_X$ задается путем
+распространения ковариации:
+\begin{equation}
+    \mathbf{S}_X = \sigma^2_0\left(\mathbf{A}^{\mathbf{T}}\mathbf{P}\mathbf{A}+\mathbf{S}\mathbf{S}^{\mathbf{T}}\right)^{-1}
+    \mathbf{A}^{\mathbf{T}}\mathbf{P}\mathbf{A}\left(\mathbf{A}^{\mathbf{T}}\mathbf{P}\mathbf{A}+\mathbf{S}\mathbf{S}^{\mathbf{T}}\right)^{-1}
+\end{equation}
+
+Код также переходит к тестированию глобальной модели, чтобы проверить, адекватна
+ли математическая модель или в данных есть отклонения. Если выполняется
+следующее условие, то корректировку модели можно считать правильной и
+завершенной до уровня значимости $\alpha$:
+\begin{equation}
+    \chi^2=\frac{\mathbf{V}^{\mathbf{T}}\mathbf{P}\mathbf{V}}{\sigma^2_{0i}}<\chi^2_c\left(1-\alpha;m\right)
+\end{equation}
+где $\sigma^2_{0i}$ -- априорная дисперсия единичного веса, а
+$\chi^2_c\left(1-\alpha;m\right)$ -- критическое значение распределения
+$\chi^2$, когда доверительный уровень равен $\alpha$, а степень свободы регулировки
+равна $m$.
+\begin{equation}
+    \chi^2_c\left(1-\alpha;m\right)=m\left[\chi_{1-\alpha}\left(\frac{2}{9m}\right)^{\frac{1}{2}}+1-\left(\frac{2}{9m}\right)\right]^3
+\end{equation}
+и для $0<\alpha<0.5$
+\begin{equation}
+    \chi_{1-\alpha} = t - \frac{2.515517 + 0.802853t + 0.010328t^2}{1 + 1.432788t + 0.189269t^2 + 0.001308t^3}
+\end{equation}
+и
+\begin{equation}
+    t = \sqrt{2\ln \left(\frac{1}{\alpha}\right)}
+\end{equation}
