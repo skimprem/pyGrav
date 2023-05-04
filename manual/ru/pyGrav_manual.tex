@@ -3,9 +3,7 @@
 % Команда для сборки:
 %   latexmk -pdf -bibtex -latexoption="-file-line-error -synctex=1 -interaction=nonstopmode -shell-escape" $fullname
 
-% \documentclass[10pt,twoside]{geodmanual}
-\documentclass[10pt,twoside]{extreport}
-
+\documentclass[10pt,a4paper,twoside]{extreport}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage[OT1]{fontenc}
@@ -16,10 +14,15 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\LARGE\bfseries\raggedright}{\thechapter}{0.5cm}{}[]
+\usepackage[left=1.5cm,right=1.5cm,top=1.5cm,bottom=1.5cm]{geometry}
+\sloppy
+
+% \documentclass[10pt,twoside]{geodmanual}
 
 \title{pyGrav}
-\author{roman}
+\author{Basile Hector}
 
 % \manualVersion{\ShowRepoVersion{}}
 
