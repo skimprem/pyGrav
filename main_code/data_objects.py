@@ -171,6 +171,19 @@ class ChannelList(object):
         templist.rej=[self.rej[ind] for ind in indexes]
         templist.t=[self.t[ind] for ind in indexes]
         templist.keepdata=[self.keepdata[ind] for ind in indexes]
+        templist.se=[self.se[ind] for ind in indexes]
+        templist.raw=[self.raw[ind] for ind in indexes]
+        templist.tiltcorr=[self.tiltcorr[ind] for ind in indexes]
+        templist.tempcorr=[self.tempcorr[ind] for ind in indexes]
+        templist.driftcorr=[self.driftcorr[ind] for ind in indexes]
+        templist.instrheight=[self.instrheight[ind] for ind in indexes]
+        templist.userlat=[self.userlat[ind] for ind in indexes]
+        templist.userlon=[self.userlon[ind] for ind in indexes]
+        templist.gpslat=[self.gpslat[ind] for ind in indexes]
+        templist.gpslon=[self.gpslon[ind] for ind in indexes]
+        templist.gpselev=[self.gpselev[ind] for ind in indexes]
+        templist.corrections=[self.corrections[ind] for ind in indexes]
+
         return templist
      
     def read_c_file(self,filename):
@@ -296,6 +309,19 @@ class ChannelList(object):
                 self.dur.append(subobj.dur[i])
                 self.rej.append(subobj.rej[i])
                 self.t.append(subobj.t[i])
+                self.userlat.append(subobj.userlat[i])
+                self.userlon.append(subobj.userlon[i])
+                self.se.append(subobj.se[i])
+                self.raw.append(subobj.raw[i])
+                self.tiltcorr.append(subobj.tiltcorr[i])
+                self.tempcorr.append(subobj.tempcorr[i])
+                self.driftcorr.append(subobj.driftcorr[i])
+                self.instrheight.append(subobj.instrheight[i])
+                self.gpslat.append(subobj.gpslat[i])
+                self.gpslon.append(subobj.gpslon[i])
+                self.gpselev.append(subobj.gpselev[i])
+                self.corrections.append(subobj.corrections[i])
+
                 if subobj.corr_g:
                     self.corr_g.append(subobj.corr_g[i])            
 ###############################################################################
@@ -788,12 +814,17 @@ class Campaign(ChannelList):
         for keysurvey,survey in self.survey_dic.items():            
             for keyloop,loop in self.survey_dic[keysurvey].loop_dic.items():  
                 for keysta,station in self.survey_dic[keysurvey].loop_dic[keyloop].station_dic.items():                  
-                    stations.append(station.station[0])
+                    stations.append([station.station[0], station.userlon[0], station.userlat[0]])
         
-        stations=set(stations)
+        # stations=set(stations)
         #set([sta for sta in self.station])
-        for sta in stations:
-            file.write("%d 0 0\n"%(sta))
+        index = 1
+        while index < len(stations):
+            if stations[index][0] in stations[:index][0]:
+                stations.pop(index)
+            else:
+                file.write("%d %.5f %.5f\n"%(stations[index-1][0], stations[index-1][1], stations[index-1][2]))
+                index += 1
         file.close()      
 
 

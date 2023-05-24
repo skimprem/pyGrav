@@ -1611,6 +1611,15 @@ class mainProg(QtWidgets.QMainWindow):
         datafordriftadj=MCwin.datafordriftadj        
 #        if not os.path.exists(output_root_dir):
 #            os.makedirs(output_root_dir)            
+        delta_lon = max(datafordriftadj.userlon) - min(datafordriftadj.userlon)
+        delta_lat = max(datafordriftadj.userlat) - min(datafordriftadj.userlat)
+        region="%.5f %.5f %.5f %.5f"%(
+            min(datafordriftadj.userlon) - delta_lon * 0.1,
+            min(datafordriftadj.userlat) - delta_lat * 0.1,
+            max(datafordriftadj.userlon) + delta_lon * 0.1,
+            max(datafordriftadj.userlat) + delta_lat * 0.1
+        )
+ 
         for survid,surv in datafordriftadj.survey_dic.items():
             if surv.keepitem==1:
                 survdir=output_root_dir+os.sep+surv.name
@@ -1654,7 +1663,14 @@ class mainProg(QtWidgets.QMainWindow):
                 create_r='N'
                 outf="mix_%s"%(surv.name)
                 fcor="stations_coordinates.txt"
-                region="1.602 9.7410 1.607 9.7460"
+                # delta_lon = max(surv.userlon) - min(surv.userlon)
+                # delta_lat = max(surv.userlat) - min(surv.userlat)
+                # region="%.5f %.5f %.5f %.5f"%(
+                #     min(surv.userlon) - delta_lon * 0.1,
+                #     min(surv.userlat) - delta_lat * 0.1,
+                #     max(surv.userlon) + delta_lon * 0.1,
+                #     max(surv.userlat) + delta_lat * 0.1
+                # )
                
                 write_mcgravi_conf_file("%s/conf_%s.conf"%(survdir,surv.name),\
                 file_list,int(MCwin.modeEdit.text()),\
@@ -1710,6 +1726,7 @@ class mainProg(QtWidgets.QMainWindow):
                 #sort the folder list (mcgravi outputs folder names with prog execution date...)
                 folders.sort()
                 #get the last one
+
                 folder=folders.pop()
                 
                 mcgravi_filename=glob.glob(folder+os.sep+output_file_pattern)
